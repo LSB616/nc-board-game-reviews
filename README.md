@@ -4,7 +4,7 @@
 
 ### **.env files**
 
-You will need to create two .env files in order to successfully connect the two databases locally: .env.test and .env.development. 
+You will need to create two .env files: .env.test and .env.development.
 
 ### *Creating the .env files*
 
