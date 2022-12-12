@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "setup-dbs": "psql -f ./db/setup.sql",
-    "seed": "npm run setup-dbs && node ./db/seeds/run-seed.js",
-    "test": "npm run seed && jest",
+    "seed": "node ./db/seeds/run-seed.js",
+    "test": "jest",
     "prepare": "husky install",
     "scrap": "npm run seed && psql -f scrap.sql > scrap.txt"
   },
