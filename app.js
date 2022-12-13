@@ -2,11 +2,10 @@ const express = require('express');
 const app = express();
 app.use(express.json());
 
-const { getCategories } = require('./controllers/board-game-review-controllers')
+const { getReviews, getCategories } = require('./controllers/board-game-review-controllers')
 const { handle500Paths, handle404Paths } = require('./controllers/controllers.errors');
 
-
-
+app.get('/api/reviews', getReviews)
 app.get('/api/categories', getCategories)
 
 
