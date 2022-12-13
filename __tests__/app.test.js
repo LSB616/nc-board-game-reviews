@@ -1,7 +1,6 @@
 const request = require("supertest");
 const db = require("../db/connection");
 const app = require("../app");
-const { string } = require("pg-format");
 
 afterAll(() => {
   if (db.end) db.end();
@@ -66,7 +65,8 @@ describe('GET /api/reviews', () => {
         descending: true
       })
     });
-  });
+  })
+});
 
 
 describe('GET /api/reviews/:review_id', () => {
@@ -107,3 +107,49 @@ describe('GET /api/reviews/:review_id', () => {
     })
   });
 });
+
+
+describe('GET /api/reviews/:review_id/comments', () => {
+  test('should return an array of comments for the provided review_id', () => {
+    return request(app)
+      .get("/api/reviews/1/comments")
+      .expect(200)
+      .then(({ body }) => {
+        const { comments } = body;
+          const expected = {          
+          comment_id: expect.any(Number),
+          review_id: expect.any(Number),
+          created_at: expect.any(String),
+          votes: expect.any(Number),
+          author: expect.any(String),
+          body: expect.any(String)
+      }
+      comments.forEach(comment => {
+        expect(comment).toEqual(expect.objectContaining(expected))
+      })
+      expect(comments.length).toBe(3);
+      expect(comments).toBeSortedBy('created_at', {
+        descending: true
+      })
+      });
+  });
+  test('should return a 404 when passed an id which does not exist', () => {
+    return request(app)
+    .get("/api/reviews/100/comments")
+      .expect(404)
+    .then(({ body: { msg } }) => {
+      expect(msg).toBe('Not Found');
+    })
+  });
+  test('should return a 400 when passed an invalid id', () => {
+    return request(app)
+    .get("/api/reviews/hello/comments")
+    .expect(400)
+    .then(({ body: { msg } }) => {
+      expect(msg).toBe('Invalid Id');
+    })
+  });
+});
+});
+
+

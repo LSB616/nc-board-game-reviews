@@ -1,7 +1,7 @@
 const request = require("supertest");
 const db = require("../db/connection");
 const app = require("../app");
-const { string } = require("pg-format");
+
 const { checkIfReviewIdExists, isIdValid } = require('../controllers/controller_functions');
 
 
