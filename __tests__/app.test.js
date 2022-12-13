@@ -127,6 +127,9 @@ describe('GET /api/reviews/:review_id/comments', () => {
       comments.forEach(comment => {
         expect(comment).toEqual(expect.objectContaining(expected))
       })
+      expect(comments[0].review_id).toBe(1);
+      expect(comments[1].review_id).toBe(1);
+      expect(comments[2].review_id).toBe(1);
       expect(comments.length).toBe(3);
       expect(comments).toBeSortedBy('created_at', {
         descending: true
@@ -150,6 +153,4 @@ describe('GET /api/reviews/:review_id/comments', () => {
     })
   });
 });
-});
-
 
