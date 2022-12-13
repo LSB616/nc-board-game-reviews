@@ -21,3 +21,9 @@ exports.selectReviews = () => {
             ORDER BY created_at DESC;`)
             .then(({ rows }) => rows)
 };
+
+exports.selectComment = (id) => {
+    return  db
+            .query(`SELECT * FROM comments WHERE review_id = $1 ORDER BY created_at DESC`, [id])
+            .then(({ rows }) => rows)
+}
