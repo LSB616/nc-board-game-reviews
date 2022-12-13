@@ -2,6 +2,12 @@ const { query } = require("../db/connection");
 const db = require("../db/connection");
 const { formatReviews } = require('../db/seeds/utils');
 
+exports.selectCategories = () => {
+    return  db
+            .query(`SELECT * FROM categories;`)
+            .then(({ rows }) => rows);
+};
+
 exports.selectReviews = () => {
     return  db
             .query(`SELECT reviews.owner, reviews.title, reviews.review_id, reviews.category, 

@@ -1,5 +1,18 @@
 const { request, response } = require("../app");
-const { selectReviews } = require("../models/board-game-review-models");
+const { selectReviews, selectCategories  } = require("../models/board-game-review-models");
+
+
+
+exports.getCategories = (req, res) => {
+    selectCategories()
+    .then((categories) => {
+        res.status(200).send({categories})
+    })
+    .catch((err) => {
+        next(err);
+    });
+};
+
 
 exports.getReviews = (req, res, next) => {
     selectReviews()
@@ -8,5 +21,6 @@ exports.getReviews = (req, res, next) => {
     })
     .catch((err) => {
         next(err)
-    })
+    });
 };
+
