@@ -5,8 +5,7 @@ app.use(express.json());
 const { getCategories, getReview } = require('./controllers/board-game-review-controllers')
 const { handle500Paths, handle404Paths, handleCustomErrors } = require('./controllers/controllers.errors');
 
-
-
+app.get('/api/reviews', getReviews)
 app.get('/api/categories', getCategories)
 
 

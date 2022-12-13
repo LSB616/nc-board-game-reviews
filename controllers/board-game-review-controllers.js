@@ -2,6 +2,7 @@ const { request, response } = require("../app");
 const { selectCategories, selectReview } = require("../models/board-game-review-models");
 const { checkIfReviewIdExists, isIdValid } = require('../controllers/controller_functions');
 
+
 exports.getCategories = (req, res, next) => {
     selectCategories()
     .then((categories) => {
@@ -12,26 +13,15 @@ exports.getCategories = (req, res, next) => {
     });
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+exports.getReviews = (req, res, next) => {
+    selectReviews()
+    .then((reviews) => {
+        res.status(200).send({reviews})
+    })
+    .catch((err) => {
+        next(err)
+    });
+};
 
 exports.getReview = (req, res, next) => {
     const id = req.params.review_id
