@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 app.use(express.json());
 
-const { getReviews, getCategories, getReview, getComments } = require('./controllers/board-game-review-controllers')
+const { getReviews, getCategories, getReview, getComments, editReview } = require('./controllers/board-game-review-controllers')
 const { handle500Paths, handle404Paths, handleCustomErrors } = require('./controllers/controllers.errors');
 
 app.get('/api/reviews', getReviews)
@@ -12,7 +12,7 @@ app.get('/api/reviews/:review_id/comments', getComments)
 
 
 
-
+app.patch('/api/reviews/:review_id', editReview)
 
 
 app.use(handleCustomErrors);

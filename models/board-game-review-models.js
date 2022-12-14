@@ -33,3 +33,21 @@ exports.selectComment = (id) => {
             .query(`SELECT * FROM comments WHERE review_id = $1 ORDER BY created_at DESC`, [id])
             .then(({ rows }) => rows)
 };
+
+
+
+
+
+
+
+
+
+
+
+exports.updateReview = (votes, id) => {
+    return  db
+            .query(`UPDATE reviews SET votes = $1 + (SELECT votes FROM reviews WHERE review_id = $2) WHERE review_id = $2 RETURNING *;`, [votes.inc_votes, id])
+            .then(({ rows }) => {
+                return rows;
+            });
+};
