@@ -1,7 +1,7 @@
 const { request, response } = require("../app");
 
-const { selectReviews, selectCategories, selectReview, selectComment  } = require("../models/board-game-review-models");
-const { checkIfReviewIdExists, isIdValid } = require('../controllers/controller_functions');
+const { selectReviews, selectCategories, selectReview, selectComment, insertComment  } = require("../models/board-game-review-models");
+const { checkIfReviewIdExists, isIdValid, isCommentValid } = require('../controllers/controller_functions');
 
 exports.getCategories = (req, res, next) => {
     selectCategories()
@@ -44,3 +44,16 @@ exports.getComments = (req, res, next) => {
         next(err);
     });
 };
+
+exports.newComment = (req, res, next) => {
+    const comment = req.body
+    const id = req.params.review_id
+
+    Promise.all([isCommentValid(comment), insertComment(comment, id)])
+    .then(([idExists, amendedComment]) => {
+        res.status(201).send({ amendedComment })
+    })
+    .catch((err) => {
+        next(err)
+    });
+  };

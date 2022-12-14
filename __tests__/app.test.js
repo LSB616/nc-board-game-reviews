@@ -59,8 +59,8 @@ describe('GET /api/reviews', () => {
       expect(review).toEqual(expect.objectContaining(expected))
       });
       expect(reviews.length).toBe(24);
-      const countTest = reviews.filter(review => review.review_id === 1)
-      expect(countTest[0].comment_count).toBe('3');
+      const countTest = reviews.filter(review => review.review_id === 3)
+      expect(countTest[0].comment_count).toBe('5');
       expect(reviews).toBeSortedBy('created_at', {
         descending: true
       })
@@ -130,7 +130,6 @@ describe('GET /api/reviews/:review_id/comments', () => {
       expect(comments[0].review_id).toBe(1);
       expect(comments[1].review_id).toBe(1);
       expect(comments[2].review_id).toBe(1);
-      expect(comments.length).toBe(3);
       expect(comments).toBeSortedBy('created_at', {
         descending: true
       })
@@ -153,4 +152,73 @@ describe('GET /api/reviews/:review_id/comments', () => {
     })
   });
 });
+
+describe('POST /api/reviews/:review_id/comments', () => {
+  const newComment = {
+    username: 'weegembump',
+    body: 'Not Enough DICE!!!!'
+  }
+  test('should add a comment to the database and respond wiht the newly created comment', () => {
+    return request(app)
+    .post("/api/reviews/1/comments")
+    .send(newComment)
+    .expect(201)
+    .then(({ body }) => {
+      const { amendedComment } = body;
+      const editedComment = [{
+        comment_id: expect.any(Number),
+        body: 'Not Enough DICE!!!!',
+        review_id: 1,
+        author: 'weegembump',
+        votes: 0,
+        created_at: expect.any(String)
+      }]
+      expect(amendedComment).toEqual(editedComment);
+    })
+  });
+  test('should return 400 when provided an invalid id', () => {
+    return request(app)
+    .post("/api/reviews/banana/comments")
+    .send(newComment)
+    .expect(400)
+    .then(({ body: { msg } }) => {
+      expect(msg).toBe("Bad Request");
+    })
+  });
+  test('should return 404 when review id not found', () => {
+    return request(app)
+    .post("/api/reviews/1000/comments")
+    .send(newComment)
+    .expect(404)
+    .then(({ body: { msg } }) => {
+      expect(msg).toBe('Path Not Found');
+    })
+  });
+  test('should return 404 when user not found', () => {
+    const invalidComment = {
+      username: 'KerplunkMaster4000',
+      body: 'Y tho??'
+    }
+    return request(app)
+    .post("/api/reviews/1/comments")
+    .send(invalidComment)
+    .expect(404)
+    .then(({ body: { msg } }) => {
+      expect(msg).toBe('Path Not Found');
+    })
+  });
+  test('should return a 400 when provided an incomplete dataset', () => {
+    const incompleteComment = {
+      username: '',
+      body: '',
+    };
+    return request(app)
+    .post("/api/reviews/1/comments")
+    .send(incompleteComment)
+    .expect(400)
+    .then(({ body: { msg } }) => {
+      expect(msg).toBe("Bad Request");
+    })
+  });
+  });
 

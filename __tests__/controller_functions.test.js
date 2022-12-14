@@ -4,6 +4,9 @@ const app = require("../app");
 
 const { checkIfReviewIdExists, isIdValid } = require('../controllers/controller_functions');
 
+afterAll(() => {
+    if (db.end) db.end();
+  });
 
 describe('checkIfReviewIdExists', () => {
     test('should return true when id exists', () => {
