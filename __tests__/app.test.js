@@ -274,7 +274,34 @@ describe('PATCH /api/reviews/:review_id', () => {
       }]})
     })
   })
-  test.only('should ', () => {
-    
+  // test.only('should respond with a 400 when provided with an invalid id', () => {
+  //   const votes = {inc_votes: 10}
+  //   return request(app)
+  //   .patch('/api/reviews/banana')
+  //   .send(votes)
+  //   .expect(400)
+  //   .then(({ body: { msg } }) => {
+  //     expect(msg).toBe("Bad Request");
+  //   })
+  //   })
+  //   test('should respond with a 404 when id not found', () => {
+  //     const votes = {inc_votes: 10}
+  //     return request(app)
+  //     .patch('/api/reviews/1000')
+  //     .send(votes)
+  //     .expect(404)
+  //     .then(({ body: { msg } }) => {
+  //       expect(msg).toBe('Path Not Found');
+  //     })
+  //   });
+  //   test('should respond with a 400 when provided an incorrect dataset', () => {
+  //     const votes = {inc_votes: ''}
+  //     return request(app)
+  //     .patch('/api/reviews/4')
+  //     .send(votes)
+  //     .expect(400)
+  //     .then(({ body: { msg } }) => {
+  //       expect(msg).toBe("Bad Request");
+  //     })
+  //   });
   });
-});
