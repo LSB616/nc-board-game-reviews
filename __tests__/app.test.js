@@ -383,7 +383,7 @@ describe('PATCH /api/reviews/:review_id', () => {
   });
 
 
-describe.only('DELETE /api/comments/:comment_id', () => {
+describe('DELETE /api/comments/:comment_id', () => {
   test('should delete a comment by comment_id', () => {
     return request(app)
     .delete('/api/comments/61')
