@@ -1,7 +1,7 @@
 const { request, response } = require("../app");
 
 
-const { selectReviews, selectCategories, selectReview, selectComment, insertComment, updateReview, selectUsers } = require("../models/board-game-review-models");
+const { selectReviews, selectCategories, selectReview, selectComment, insertComment, updateReview, selectUsers, removeComment } = require("../models/board-game-review-models");
 
 
 const { checkIfReviewIdExists, isIdValid, isCommentValid } = require('../controllers/controller_functions');
@@ -94,6 +94,17 @@ exports.postComment = (req, res, next) => {
     selectUsers()
     .then((users) => {
         res.status(200).send({users})
+    })
+    .catch((err) => {
+        next(err);
+    });
+};
+
+exports.deleteComment = (req, res, next) => {
+    const id = req.params.comment_id
+    removeComment(id)
+    .then((comment) =>{
+        res.status(204).send({comment})
     })
     .catch((err) => {
         next(err);
