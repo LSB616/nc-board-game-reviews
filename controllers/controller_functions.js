@@ -5,7 +5,7 @@ exports.checkIfReviewIdExists = (id) => {
             .query(`SELECT * FROM reviews WHERE review_id = $1;`, [id])
             .then((rows) => {
                 if (rows.rowCount === 0) {
-                    return Promise.reject({ status: 404, msg: 'Not Found' })
+                    return Promise.reject({ status: 404, msg: 'ID Not Found' })
                 } else {
                     return true;
                 };

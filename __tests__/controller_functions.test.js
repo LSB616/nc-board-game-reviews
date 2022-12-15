@@ -15,7 +15,7 @@ describe('checkIfReviewIdExists', () => {
         });
     });
     test('should return not found when id does not exist', () => {
-        const expected = {status: 404, msg: 'Not Found'}
+        const expected = {status: 404, msg: 'ID Not Found'}
         return expect(checkIfReviewIdExists('100')).rejects.toEqual(expected)
     });
 });
