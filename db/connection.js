@@ -15,23 +15,8 @@ const config =
 		? {
 				connectionString: process.env.DATABASE_URL,
 				max: 2,
-        user: 'lewis',
-        host: 'localhost',
-        password: 'password',
-        port: 5432
 		  }
-		: {  user: 'lewis',
-    host: 'localhost',
-    password: 'password',
-    port: 5432};
-
-
-const securityDetails = {
-  user: 'lewis',
-  host: 'localhost',
-  password: 'password',
-  port: 5432
-  }
+		: {};
 
 
 module.exports = new Pool(config);
