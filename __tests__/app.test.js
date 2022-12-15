@@ -242,9 +242,9 @@ describe('PATCH /api/reviews/:review_id', () => {
     .send(votes)
     .expect(200)
     .then(({ body }) => {
-      expect(body).toEqual({review: [{
+      expect(body).toEqual({review: {
         ...reviewFour
-      }]})
+      }})
     })
   });
   test('should accept a negative number and update the votes property according to the number returning updated review', () => {
@@ -265,9 +265,9 @@ describe('PATCH /api/reviews/:review_id', () => {
     .send(votes)
     .expect(200)
     .then(({ body }) => {
-      expect(body).toEqual({review: [{
+      expect(body).toEqual({review: {
         ...reviewFour
-      }]})
+      }})
     })
   })
   test('should respond with a 400 when provided with an invalid id', () => {

@@ -62,7 +62,7 @@ exports.postComment = (req, res, next) => {
   };
 
 
-  exports.editReview = (req, res, next) => {
+  exports.patchReview = (req, res, next) => {
     const id = req.params.review_id;
     const votes = req.body
 
