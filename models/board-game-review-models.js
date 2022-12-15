@@ -48,7 +48,7 @@ exports.insertComment = (comment, id) => {
     return  db
             .query(`UPDATE reviews SET votes = $1 + (SELECT votes FROM reviews WHERE review_id = $2) WHERE review_id = $2 RETURNING *;`, [votes.inc_votes, id])
             .then(({ rows }) => {
-                return rows;
+                return rows[0];
             });
 };
 
