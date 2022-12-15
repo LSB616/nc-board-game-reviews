@@ -2,7 +2,7 @@ const { request, response } = require("../app");
 
 
 const { selectReviews, selectCategories, selectReview, selectComment, insertComment, updateReview, selectUsers } = require("../models/board-game-review-models");
-const { checkIfReviewIdExists, isIdValid, isCommentValid } = require('../controllers/controller_functions');
+const { checkIfReviewIdExists, isIdValid, isCommentValid, checkIfCategoryExists } = require('../controllers/controller_functions');
 
 
 exports.getCategories = (req, res, next) => {
@@ -59,10 +59,9 @@ exports.postComment = (req, res, next) => {
     .catch((err) => {
         next(err)
     });
-  };
+};
 
-
-  exports.patchReview = (req, res, next) => {
+exports.patchReview = (req, res, next) => {
     const id = req.params.review_id;
     const votes = req.body
 
@@ -75,22 +74,7 @@ exports.postComment = (req, res, next) => {
     });
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  exports.getUsers = (req, res, next) => {
+exports.getUsers = (req, res, next) => {
     selectUsers()
     .then((users) => {
         res.status(200).send({users})

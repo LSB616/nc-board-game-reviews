@@ -61,10 +61,9 @@ exports.insertComment = (comment, id) => {
             .then(({ rows }) => {
                 return rows
             });
-  };
+};
 
-
-  exports.updateReview = (votes, id) => {
+exports.updateReview = (votes, id) => {
     return  db
             .query(`UPDATE reviews SET votes = $1 + (SELECT votes FROM reviews WHERE review_id = $2) WHERE review_id = $2 RETURNING *;`, [votes.inc_votes, id])
             .then(({ rows }) => {
@@ -72,21 +71,10 @@ exports.insertComment = (comment, id) => {
             });
 };
 
-  
-
-
-
-
-
-
-
-
-
-  
-  exports.selectUsers = () => {
+exports.selectUsers = () => {
     return  db
     .query(`SELECT * FROM users;`)
     .then(({ rows }) => rows);
-  };
+};
   
 
