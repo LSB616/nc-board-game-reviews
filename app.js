@@ -3,7 +3,7 @@ const app = express();
 app.use(express.json());
 
 
-const { getReviews, getCategories, getReview, getComments, postComment, editReview, newComment, getUsers } = require('./controllers/board-game-review-controllers')
+const { getReviews, getCategories, getReview, getComments, postComment, editReview, getUsers } = require('./controllers/board-game-review-controllers')
 const { handle500Paths, handle404Paths, handleCustomErrors, handlesPsqlErrors } = require('./controllers/controllers.errors');
 
 app.get('/api/reviews', getReviews)

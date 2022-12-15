@@ -1,7 +1,7 @@
 const { request, response } = require("../app");
 
 
-const { selectReviews, selectCategories, selectReview, selectComment, updateReview, insertComment, insertComment, selectUsers } = require("../models/board-game-review-models");
+const { selectReviews, selectCategories, selectReview, selectComment, insertComment, updateReview, selectUsers } = require("../models/board-game-review-models");
 
 
 const { checkIfReviewIdExists, isIdValid, isCommentValid } = require('../controllers/controller_functions');
