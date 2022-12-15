@@ -76,6 +76,7 @@ describe('GET /api/reviews/:review_id', () => {
     .expect(200)
     .then(({ body }) => {
       const { review } = body
+      console.log(review);
       const expected = {
         review_id: 1,
         title: 'Culture a Love of Agriculture With Agricola',
@@ -85,9 +86,10 @@ describe('GET /api/reviews/:review_id', () => {
         votes: 1,
         category: 'strategy',
         owner: 'tickle122',
-        created_at: '2021-01-18T10:00:20.514Z'
+        created_at: '2021-01-18T10:00:20.514Z',
+        comment_count: "3"
       }
-    expect(review[0]).toEqual(expected);
+    expect(review).toEqual(expect.objectContaining(expected));
     })
   });
   test('should return a 404 when passed an id which does not exist', () => {
