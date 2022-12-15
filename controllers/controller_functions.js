@@ -19,3 +19,11 @@ exports.isIdValid = (id) => {
         return true;
     }
 };
+
+exports.isCommentValid = (comment) => {
+const { username, body } = comment;
+if (username.length === 0 || body.length === 0){
+    return Promise.reject({ status: 400, msg: "Bad Request" })
+}
+return true;
+};
