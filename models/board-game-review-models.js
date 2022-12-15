@@ -34,23 +34,6 @@ exports.selectComment = (id) => {
             .then(({ rows }) => rows)
 };
 
-
-
-
-
-
-
-
-
-
-
-exports.updateReview = (votes, id) => {
-    return  db
-            .query(`UPDATE reviews SET votes = $1 + (SELECT votes FROM reviews WHERE review_id = $2) WHERE review_id = $2 RETURNING *;`, [votes.inc_votes, id])
-            .then(({ rows }) => {
-                return rows;
-            });
-};
 exports.insertComment = (comment, id) => {
     const { username, body } = comment
     return  db
@@ -60,5 +43,13 @@ exports.insertComment = (comment, id) => {
                 return rows
             });
   };
+
+  exports.updateReview = (votes, id) => {
+    return  db
+            .query(`UPDATE reviews SET votes = $1 + (SELECT votes FROM reviews WHERE review_id = $2) WHERE review_id = $2 RETURNING *;`, [votes.inc_votes, id])
+            .then(({ rows }) => {
+                return rows;
+            });
+};
 
   

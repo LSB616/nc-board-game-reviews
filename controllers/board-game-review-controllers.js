@@ -45,58 +45,7 @@ exports.getComments = (req, res, next) => {
     });
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-exports.editReview = (req, res, next) => {
-    const id = req.params.review_id;
-    const votes = req.body
-
-    updateReview(votes, id)
-    .then((review) => {
-        res.status(200).send({review})
-    })
-    .catch((err) => {
-        next(err);
-    });
-};
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-exports.editReview = (req, res, next) => {
-    const id = req.params.review_id;
-    const votes = req.body
-
-    updateReview(votes, id)
-    .then((review) => {
-        res.status(200).send({review})
-    })
-    .catch((err) => {
-        next(err);
-    });
-};
-exports.newComment = (req, res, next) => {
+exports.postComment = (req, res, next) => {
     const comment = req.body
     const id = req.params.review_id
 
@@ -108,3 +57,16 @@ exports.newComment = (req, res, next) => {
         next(err)
     });
   };
+
+  exports.editReview = (req, res, next) => {
+    const id = req.params.review_id;
+    const votes = req.body
+
+    Promise.all([checkIfReviewIdExists(id), updateReview(votes, id)])
+    .then(([idExists, review]) => {
+        res.status(200).send({review})
+    })
+    .catch((err) => {
+        next(err);
+    });
+};

@@ -59,8 +59,8 @@ describe('GET /api/reviews', () => {
       expect(review).toEqual(expect.objectContaining(expected))
       });
       expect(reviews.length).toBe(24);
-      const countTest = reviews.filter(review => review.review_id === 1)
-      expect(countTest[0].comment_count).toBe('3');
+      const countTest = reviews.filter(review => review.review_id === 3)
+      expect(countTest[0].comment_count).toBe('5');
       expect(reviews).toBeSortedBy('created_at', {
         descending: true
       })
@@ -95,7 +95,7 @@ describe('GET /api/reviews/:review_id', () => {
     .get("/api/reviews/100")
     .expect(404)
     .then(({ body: { msg } }) => {
-      expect(msg).toBe('Not Found');
+      expect(msg).toBe('ID Not Found');
     })
   });
   test('should return a 400 when passed an invalid id', () => {
@@ -130,7 +130,6 @@ describe('GET /api/reviews/:review_id/comments', () => {
       expect(comments[0].review_id).toBe(1);
       expect(comments[1].review_id).toBe(1);
       expect(comments[2].review_id).toBe(1);
-      expect(comments.length).toBe(3);
       expect(comments).toBeSortedBy('created_at', {
         descending: true
       })
@@ -141,7 +140,7 @@ describe('GET /api/reviews/:review_id/comments', () => {
     .get("/api/reviews/100/comments")
       .expect(404)
     .then(({ body: { msg } }) => {
-      expect(msg).toBe('Not Found');
+      expect(msg).toBe('ID Not Found');
     })
   });
   test('should return a 400 when passed an invalid id', () => {
@@ -166,7 +165,7 @@ describe('POST /api/reviews/:review_id/comments', () => {
     .expect(201)
     .then(({ body }) => {
       const { amendedComment } = body;
-      const editedComment = [{
+      const expectedComment = [{
         comment_id: expect.any(Number),
         body: 'Not Enough DICE!!!!',
         review_id: 1,
@@ -174,7 +173,7 @@ describe('POST /api/reviews/:review_id/comments', () => {
         votes: 0,
         created_at: expect.any(String)
       }]
-      expect(amendedComment).toEqual(editedComment);
+      expect(amendedComment).toEqual(expect.objectContaining(expectedComment));
     })
   });
   test('should return 400 when provided an invalid id', () => {
@@ -192,7 +191,7 @@ describe('POST /api/reviews/:review_id/comments', () => {
     .send(newComment)
     .expect(404)
     .then(({ body: { msg } }) => {
-      expect(msg).toBe('Path Not Found');
+      expect(msg).toBe("Resource Not Found");
     })
   });
   test('should return 404 when user not found', () => {
@@ -205,7 +204,7 @@ describe('POST /api/reviews/:review_id/comments', () => {
     .send(invalidComment)
     .expect(404)
     .then(({ body: { msg } }) => {
-      expect(msg).toBe('Path Not Found');
+      expect(msg).toBe("Resource Not Found");
     })
   });
   test('should return a 400 when provided an incomplete dataset', () => {
@@ -222,230 +221,6 @@ describe('POST /api/reviews/:review_id/comments', () => {
     })
   });
   });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// describe('PATCH /api/reviews/:review_id', () => {
-//   test('should accept a positive number and update the votes property according to the number returning updated review', () => {
-//     const votes = {inc_votes: 5}
-//     const reviewFour = {
-//       review_id: 4,
-//       title: 'One Night Ultimate Werewolf',
-//       category: 'hidden-roles',
-//       designer: 'Akihisa Okui',
-//       owner: 'happyamy2016',
-//       review_body: 'We couldn\'t find the werewolf!',
-//       review_img_url: 'https://images.pexels.com/photos/5350049/pexels-photo-5350049.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260',
-//       created_at: '2021-01-18T10:01:41.251Z',
-//       votes: 10
-//     }
-//     return request(app)
-//     .patch('/api/reviews/4')
-//     .send(votes)
-//     .expect(200)
-//     .then(({ body }) => {
-//       expect(body).toEqual({review: [{
-//         ...reviewFour
-//       }]})
-//     })
-//   });
-//   test('should accept a negative number and update the votes property according to the number returning updated review', () => {
-//     const votes = {inc_votes: -10}
-//     const reviewFour = {
-//       review_id: 4,
-//       title: 'One Night Ultimate Werewolf',
-//       category: 'hidden-roles',
-//       designer: 'Akihisa Okui',
-//       owner: 'happyamy2016',
-//       review_body: 'We couldn\'t find the werewolf!',
-//       review_img_url: 'https://images.pexels.com/photos/5350049/pexels-photo-5350049.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260',
-//       created_at: '2021-01-18T10:01:41.251Z',
-//       votes: 0
-//     }
-//     return request(app)
-//     .patch('/api/reviews/4')
-//     .send(votes)
-//     .expect(200)
-//     .then(({ body }) => {
-//       expect(body).toEqual({review: [{
-//         ...reviewFour
-//       }]})
-//     })
-//   })
-  // test.only('should respond with a 400 when provided with an invalid id', () => {
-  //   const votes = {inc_votes: 10}
-  //   return request(app)
-  //   .patch('/api/reviews/banana')
-  //   .send(votes)
-  //   .expect(400)
-  //   .then(({ body: { msg } }) => {
-  //     expect(msg).toBe("Bad Request");
-  //   })
-  //   })
-  //   test('should respond with a 404 when id not found', () => {
-  //     const votes = {inc_votes: 10}
-  //     return request(app)
-  //     .patch('/api/reviews/1000')
-  //     .send(votes)
-  //     .expect(404)
-  //     .then(({ body: { msg } }) => {
-  //       expect(msg).toBe('Path Not Found');
-  //     })
-  //   });
-  //   test('should respond with a 400 when provided an incorrect dataset', () => {
-  //     const votes = {inc_votes: ''}
-  //     return request(app)
-  //     .patch('/api/reviews/4')
-  //     .send(votes)
-  //     .expect(400)
-  //     .then(({ body: { msg } }) => {
-  //       expect(msg).toBe("Bad Request");
-  //     })
-  //   });
-  // });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 describe('PATCH /api/reviews/:review_id', () => {
   test('should accept a positive number and update the votes property according to the number returning updated review', () => {
@@ -494,34 +269,34 @@ describe('PATCH /api/reviews/:review_id', () => {
       }]})
     })
   })
-  // test.only('should respond with a 400 when provided with an invalid id', () => {
-  //   const votes = {inc_votes: 10}
-  //   return request(app)
-  //   .patch('/api/reviews/banana')
-  //   .send(votes)
-  //   .expect(400)
-  //   .then(({ body: { msg } }) => {
-  //     expect(msg).toBe("Bad Request");
-  //   })
-  //   })
-  //   test('should respond with a 404 when id not found', () => {
-  //     const votes = {inc_votes: 10}
-  //     return request(app)
-  //     .patch('/api/reviews/1000')
-  //     .send(votes)
-  //     .expect(404)
-  //     .then(({ body: { msg } }) => {
-  //       expect(msg).toBe('Path Not Found');
-  //     })
-  //   });
-  //   test('should respond with a 400 when provided an incorrect dataset', () => {
-  //     const votes = {inc_votes: ''}
-  //     return request(app)
-  //     .patch('/api/reviews/4')
-  //     .send(votes)
-  //     .expect(400)
-  //     .then(({ body: { msg } }) => {
-  //       expect(msg).toBe("Bad Request");
-  //     })
-  //   });
+  test('should respond with a 400 when provided with an invalid id', () => {
+    const votes = {inc_votes: 10}
+    return request(app)
+    .patch('/api/reviews/banana')
+    .send(votes)
+    .expect(400)
+    .then(({ body: { msg } }) => {
+      expect(msg).toBe("Bad Request");
+    })
+    })
+    test('should respond with a 404 when id not found', () => {
+      const votes = {inc_votes: 10}
+      return request(app)
+      .patch('/api/reviews/1000')
+      .send(votes)
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe('ID Not Found');
+      })
+    });
+    test('should respond with a 400 when provided an incorrect dataset', () => {
+      const votes = {inc_votes: ''}
+      return request(app)
+      .patch('/api/reviews/4')
+      .send(votes)
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad Request");
+      })
+    });
   });
