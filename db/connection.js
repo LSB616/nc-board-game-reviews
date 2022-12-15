@@ -9,9 +9,18 @@ if (!process.env.PGDATABASE) {
   throw new Error('PGDATABASE not set');
 }
 
-module.exports = new Pool({
+const config = ENV === 'production' ? {
+  connectionString: process.env.DATABASE_URL,
+  max: 2,
+} : {};
+
+
+const securityDetails = {
   user: 'lewis',
   host: 'localhost',
   password: 'password',
   port: 5432
-  });
+  }
+
+
+module.exports = new Pool(securityDetails, config);
