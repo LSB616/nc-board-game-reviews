@@ -76,7 +76,6 @@ describe('GET /api/reviews/:review_id', () => {
     .expect(200)
     .then(({ body }) => {
       const { review } = body
-      console.log(review);
       const expected = {
         review_id: 1,
         title: 'Culture a Love of Agriculture With Agricola',
