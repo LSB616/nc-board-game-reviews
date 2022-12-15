@@ -44,4 +44,18 @@ exports.insertComment = (comment, id) => {
             });
   };
 
+
+
+
+
+
+
+
+
+  
+  exports.selectUsers = () => {
+    return  db
+    .query(`SELECT * FROM users;`)
+    .then(({ rows }) => rows);
+  };
   
