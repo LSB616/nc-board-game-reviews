@@ -1,6 +1,8 @@
 const { response } = require("express");
 const { query } = require("../db/connection");
 const db = require("../db/connection");
+const { read } = require("fs");
+const fs = require('fs/promises');
 
 exports.selectCategories = () => {
     return  db
@@ -77,3 +79,8 @@ exports.selectUsers = () => {
     .query(`SELECT * FROM users;`)
     .then(({ rows }) => rows);
 };
+
+exports.returnApi = () => {
+    return fs.readFile(`./endpoints.json`, 'utf-8')
+    .then((endPoints) => JSON.parse(endPoints))
+}
