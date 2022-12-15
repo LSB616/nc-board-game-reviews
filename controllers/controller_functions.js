@@ -27,3 +27,20 @@ if (username.length === 0 || body.length === 0){
 }
 return true;
 };
+
+
+exports.checkIfCategoryExists = (category) => {
+    if (category === undefined){
+        return true
+    };
+
+    return  db
+            .query(`SELECT * FROM reviews WHERE category = $1;`, [category])
+            .then((rows) => {
+                if (rows.rowCount === 0) {
+                    return Promise.reject({ status: 404, msg: 'Category Does Not Exist' })
+                } else {
+                    return true;
+                };
+            });
+};
