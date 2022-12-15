@@ -1,6 +1,9 @@
 const { request, response } = require("../app");
 
-const { selectReviews, selectCategories, selectReview, selectComment, updateReview, insertComment } = require("../models/board-game-review-models");
+
+const { selectReviews, selectCategories, selectReview, selectComment, updateReview, insertComment, insertComment, selectUsers } = require("../models/board-game-review-models");
+
+
 const { checkIfReviewIdExists, isIdValid, isCommentValid } = require('../controllers/controller_functions');
 
 exports.getCategories = (req, res, next) => {
@@ -58,6 +61,7 @@ exports.postComment = (req, res, next) => {
     });
   };
 
+
   exports.editReview = (req, res, next) => {
     const id = req.params.review_id;
     const votes = req.body
@@ -65,6 +69,31 @@ exports.postComment = (req, res, next) => {
     Promise.all([checkIfReviewIdExists(id), updateReview(votes, id)])
     .then(([idExists, review]) => {
         res.status(200).send({review})
+     })
+    .catch((err) => {
+        next(err);
+    });
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  exports.getUsers = (req, res, next) => {
+    selectUsers()
+    .then((users) => {
+        res.status(200).send({users})
     })
     .catch((err) => {
         next(err);
