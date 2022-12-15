@@ -222,3 +222,82 @@ describe('POST /api/reviews/:review_id/comments', () => {
   });
   });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  describe('GET /api/users', () => {
+    test('should return an object with the key of users and an array of the category objects', () => {
+        return request(app)
+        .get("/api/users")
+        .expect(200)
+        .then(({ body }) => {
+            const { users } = body
+            const expected = {          
+            username: expect.any(String),
+            name: expect.any(String),
+            avatar_url: expect.any(String)
+            };
+            users.forEach(user => {
+              expect(user).toEqual(expect.objectContaining(expected))
+            });
+            expect(users.length).toBe(6);
+        })
+    });
+  });
