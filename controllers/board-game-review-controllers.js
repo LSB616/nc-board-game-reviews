@@ -2,9 +2,8 @@ const { request, response } = require("../app");
 
 
 const { selectReviews, selectCategories, selectReview, selectComment, insertComment, updateReview, selectUsers } = require("../models/board-game-review-models");
-
-
 const { checkIfReviewIdExists, isIdValid, isCommentValid } = require('../controllers/controller_functions');
+
 
 exports.getCategories = (req, res, next) => {
     selectCategories()
@@ -17,8 +16,9 @@ exports.getCategories = (req, res, next) => {
 };
 
 exports.getReviews = (req, res, next) => {
-    selectReviews()
-    .then((reviews) => {
+const { category, sort_by, order } = req.query;
+    Promise.all([checkIfCategoryExists(category), selectReviews(category, sort_by, order)])
+    .then(([checkIfCategoryExists, reviews]) => {
         res.status(200).send({reviews})
     })
     .catch((err) => {
