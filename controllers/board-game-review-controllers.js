@@ -1,7 +1,7 @@
 const { request, response } = require("../app");
 
 
-const { selectReviews, selectCategories, selectReview, selectComment, insertComment, updateReview, selectUsers } = require("../models/board-game-review-models");
+const { selectReviews, selectCategories, selectReview, selectComment, insertComment, updateReview, selectUsers,  } = require("../models/board-game-review-models");
 const { checkIfReviewIdExists, isIdValid, isCommentValid, checkIfCategoryExists } = require('../controllers/controller_functions');
 
 
@@ -83,3 +83,17 @@ exports.getUsers = (req, res, next) => {
         next(err);
     });
 };
+
+
+
+
+
+
+
+
+
+
+
+exports.getApi = (req, res, next) => {
+    res.status(200)
+}

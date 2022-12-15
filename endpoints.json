@@ -30,5 +30,90 @@
         }
       ]
     }
+  },
+  "GET /api/reviews/:review_id": {
+    "description": "serves a specific review",
+    "queries": [],
+    "exampleResponse": {
+      "review": [
+        {
+          "review_id": 1,
+          "title": "Culture a Love of Agriculture With Agricola",
+          "review_body": "You could sum up Agricola with the simple phrase 'Farmyeard Fun' but the mechanics and game play add so much more than that. You'll find yourself torn between breeding pigs, or sowing crops. Its joyeous and rewarding and it makes you think of time spent outside, which is much harder to do these days!",
+          "designer": "Uwe Rosenberg",
+          "review_img_url": "https://images.pexels.com/photos/4917821/pexels-photo-4917821.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+          "votes": 1,
+          "category": "strategy",
+          "owner": "tickle122",
+          "created_at": "2021-01-18 10:00:20.514"
+        }
+      ]
+    }
+  },
+  "GET /api/reviews/:review_id/comments": {
+    "description": "serves all comments from a specific review",
+    "queries": [],
+    "exampleResponse": {
+      "comments": [
+        {
+          "comment_id": 1,
+          "review_id": 2,
+          "created_at": "2017-11-22 12:36:03.389",
+          "votes": 16,
+          "author": "happyamy2016",
+          "body": "I loved this game too!"
+        }
+      ]
+    }
+  },
+  "GET /api/users": {
+    "description": "serves an array of all users",
+    "queries": [],
+    "exampleResponse": [
+            {          
+            "username": "tickle122",
+            "name": "Tom Tickle",
+            "avatar_url": "https://vignette.wikia.nocookie.net/mrmen/images/d/d6/Mr-Tickle-9a.png/revision/latest?cb=20180127221953"
+            }
+          ]
+  },
+  "POST /api/reviews/:review_id/comments": {
+    "description": "adds a new comment to a specific review",
+    "queries": [],
+    "examplePost": {
+      "username": "weegembump",
+      "body": "Not Enough DICE!!!!"
+    },
+    "exampleResponse": {
+      "comment": [
+        {
+        "comment_id": 75,
+        "body": "Not Enough DICE!!!!",
+        "review_id": 1,
+        "author": "weegembump",
+        "votes": 0,
+        "created_at": "2019-05-14 11:39:16.458"
+        }
+      ]
+    }
+  },
+  "PATCH /api/reviews/:review_id": {
+    "description": "edits a review id updating the number of votes according to the provided amount",
+    "queries": [],
+    "examplePatch": {
+      "inc_votes": 5
+    },
+    "examplePost": {
+      "review_id": 4,
+      "title": "One Night Ultimate Werewolf",
+      "category": "hidden-roles",
+      "designer": "Akihisa Okui",
+      "owner": "happyamy2016",
+      "review_body": "We couldn't find the werewolf!",
+      "review_img_url": "https://images.pexels.com/photos/5350049/pexels-photo-5350049.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+      "created_at": "2021-01-18 10:01:41.251",
+      "votes": 10
+    }
   }
 }
+

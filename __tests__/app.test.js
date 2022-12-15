@@ -391,7 +391,7 @@ describe('PATCH /api/reviews/:review_id', () => {
   });
 
 describe('GET /api/users', () => {
-    test('should return an object with the key of users and an array of the category objects', () => {
+    test('should return an object with the key of users and an array of the user objects', () => {
         return request(app)
         .get("/api/users")
         .expect(200)
@@ -409,3 +409,11 @@ describe('GET /api/users', () => {
         })
     });
   });
+
+// describe.only('GET /api', () => {
+//   test('should return a JSON describing all the available endpoints', () => {
+//     return request(app)
+//     .get("/api")
+//     .expect(200)
+//   });
+// });

@@ -1,3 +1,4 @@
+const { response } = require("express");
 const { query } = require("../db/connection");
 const db = require("../db/connection");
 
@@ -76,5 +77,3 @@ exports.selectUsers = () => {
     .query(`SELECT * FROM users;`)
     .then(({ rows }) => rows);
 };
-  
-
