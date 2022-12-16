@@ -47,8 +47,16 @@ if (validSortByQueries.includes(sortBy)){
 
 exports.selectReview = (id) => {
     return  db
-            .query(`SELECT * FROM reviews WHERE review_id = $1;`, [id])
-            .then(({ rows }) => rows);
+            .query(`SELECT reviews.owner, reviews.title, reviews.review_id, reviews.category, 
+            reviews.review_img_url, reviews.created_at, reviews.votes, reviews.review_body, reviews.designer,
+            COUNT(comments.review_id)
+            AS comment_count 
+            FROM reviews 
+            LEFT JOIN comments 
+            ON reviews.review_id = comments.review_id
+            WHERE comments.review_id = $1
+            GROUP BY reviews.review_id;`, [id])
+            .then(({ rows }) => rows[0]);
 };
 
 exports.selectComment = (id) => {

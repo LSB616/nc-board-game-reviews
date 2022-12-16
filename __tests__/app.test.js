@@ -173,11 +173,33 @@ describe('GET /api/reviews/:review_id', () => {
         votes: 1,
         category: 'strategy',
         owner: 'tickle122',
-        created_at: '2021-01-18T10:00:20.514Z'
+        created_at: '2021-01-18T10:00:20.514Z',
+        comment_count: "3"
       }
-    expect(review[0]).toEqual(expected);
+    expect(review).toEqual(expect.objectContaining(expected));
     })
   });
+  test('should expect an accurate count of the comments associated with the review id', () => {
+    return request(app)
+    .get("/api/reviews/1")
+    .expect(200)
+    .then(({ body }) => {
+      const { review } = body
+      const expected = {
+        review_id: 2,
+        title: 'JengARRGGGH!',
+        review_body: 'Few games are equiped to fill a player with such a defined sense of mild-peril, but a friendly game of Jenga will turn the mustn\'t-make-it-fall anxiety all the way up to 11! Fiddly fun for all the family, this game needs little explaination. Whether you\'re a player who chooses to play it safe, or one who lives life on the edge, eventually the removal of blocks will destabilise the tower and all your Jenga dreams come tumbling down.',
+        designer: 'Leslie Scott',
+        review_img_url: 'https://images.pexels.com/photos/4009761/pexels-photo-4009761.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260',
+        votes: 5,
+        category: 'dexterity',
+        owner: 'grumpy19',
+        created_at: '2021-01-18T10:01:41.251Z',
+        comment_count: "3"
+      }
+      expect(review.comment_count).toBe('3');
+  });
+});
   test('should return a 404 when passed an id which does not exist', () => {
     return request(app)
     .get("/api/reviews/100")
