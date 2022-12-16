@@ -89,6 +89,12 @@ exports.selectUsers = () => {
     .then(({ rows }) => rows);
 };
 
+exports.removeComment = (id) => {
+    return  db
+            .query(`DELETE FROM comments WHERE comment_id = $1;`, [id])
+            .then(({ rows }) => rows)
+};
+
 exports.returnApi = () => {
     return fs.readFile(`./endpoints.json`, 'utf-8')
     .then((endPoints) => JSON.parse(endPoints))
