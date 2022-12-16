@@ -392,4 +392,12 @@ describe('DELETE /api/comments/:comment_id', () => {
       expect(body).toEqual({});
     })
   });
-});
+  test('should return an error when provided at invalid comment id', () => {
+        return request(app)
+    .delete('/api/comments/banana')
+    .expect(400)
+    .then(({ body: { msg } }) => {
+      expect(msg).toBe("Bad Request");
+    })
+    })
+  });
