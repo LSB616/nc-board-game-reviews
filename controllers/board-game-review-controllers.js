@@ -1,7 +1,7 @@
 const { request, response } = require("../app");
 
 
-const { selectReviews, selectCategories, selectReview, selectComment, insertComment, updateReview, selectUsers } = require("../models/board-game-review-models");
+const { selectReviews, selectCategories, selectReview, selectComment, insertComment, updateReview, selectUsers, returnApi } = require("../models/board-game-review-models");
 const { checkIfReviewIdExists, isIdValid, isCommentValid, checkIfCategoryExists } = require('../controllers/controller_functions');
 
 
@@ -82,4 +82,24 @@ exports.getUsers = (req, res, next) => {
     .catch((err) => {
         next(err);
     });
+};
+
+
+
+
+
+
+
+
+
+
+
+exports.getApi = (req, res, next) => {
+    returnApi()
+    .then((endPoints) => {
+        res.status(200).send(endPoints)
+    })
+    .catch((err) => {
+        next(err);
+    });  
 };
