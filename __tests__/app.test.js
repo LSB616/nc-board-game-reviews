@@ -66,6 +66,94 @@ describe('GET /api/reviews', () => {
       })
     });
   })
+  test('should accept a category query returning all reviews relevant to that category', () => {
+    return request(app)
+    .get('/api/reviews?category=strategy')
+    .expect(200)
+    .then(( { body: { reviews } }) => {
+      reviews.forEach(review => {
+        expect(review.category).toBe('strategy')
+      })
+      expect(reviews).toHaveLength(6);
+    })
+  });
+  test('should accept a sort by query of owner', () => {
+    return request(app)
+    .get("/api/reviews?sort_by=owner")
+    .expect(200)
+    .then(( { body: { reviews } }) => {
+      expect(reviews).toBeSortedBy('owner', {
+        descending: true});
+    })
+  });
+  test('should accept a sort by query of title', () => {
+    return request(app)
+    .get("/api/reviews?sort_by=title")
+    .expect(200)
+    .then(( { body: { reviews } }) => {
+      expect(reviews).toBeSortedBy('title', {
+        descending: true});
+    })
+  });
+  test('should accept a sort by query of category', () => {
+    return request(app)
+    .get("/api/reviews?sort_by=category")
+    .expect(200)
+    .then(( { body: { reviews } }) => {
+      expect(reviews).toBeSortedBy('category', {
+        descending: true});
+    })
+  });
+  test('should accept a sort by query of designer', () => {
+    return request(app)
+    .get("/api/reviews?sort_by=designer")
+    .expect(200)
+    .then(( { body: { reviews } }) => {
+      expect(reviews).toBeSortedBy('designer', {
+        descending: true});
+    })
+  });
+  test('should accept a sort by query of created_at', () => {
+    return request(app)
+    .get("/api/reviews?sort_by=created_at")
+    .expect(200)
+    .then(( { body: { reviews } }) => {
+      expect(reviews).toBeSortedBy('created_at', {
+        descending: true});
+    })
+  });
+  test('should allow client to sort by asc', () => {
+    return request(app)
+    .get("/api/reviews?order=asc")
+    .expect(200)
+    .then(( { body: { reviews } }) => {
+      expect(reviews).toBeSortedBy('created_at');
+    })
+  });
+  test('should result in a 404 request if passed an non-existant category', () => {
+    return request(app)
+    .get('/api/reviews?category=YEET')
+    .expect(404)
+    .then(({ body: { msg } }) => {
+      expect(msg).toBe('Category Does Not Exist');
+  });
+  });
+  test('should not allow result to be sorted by an invalid query and should return a 400', () => {
+    return request(app)
+    .get("/api/reviews?sort_by=invalid")
+    .expect(400)
+    .then(({ body: { msg } }) => {
+      expect(msg).toBe('Bad Request');
+  });
+  });
+  test('should not allow result to be ordered by an invalid query and should return a 400', () => {
+    return request(app)
+    .get("/api/reviews?order=invalid")
+    .expect(400)
+    .then(({ body: { msg } }) => {
+      expect(msg).toBe('Bad Request');
+  });
+  });
 });
 
 
@@ -85,11 +173,33 @@ describe('GET /api/reviews/:review_id', () => {
         votes: 1,
         category: 'strategy',
         owner: 'tickle122',
-        created_at: '2021-01-18T10:00:20.514Z'
+        created_at: '2021-01-18T10:00:20.514Z',
+        comment_count: "3"
       }
-    expect(review[0]).toEqual(expected);
+    expect(review).toEqual(expect.objectContaining(expected));
     })
   });
+  test('should expect an accurate count of the comments associated with the review id', () => {
+    return request(app)
+    .get("/api/reviews/1")
+    .expect(200)
+    .then(({ body }) => {
+      const { review } = body
+      const expected = {
+        review_id: 2,
+        title: 'JengARRGGGH!',
+        review_body: 'Few games are equiped to fill a player with such a defined sense of mild-peril, but a friendly game of Jenga will turn the mustn\'t-make-it-fall anxiety all the way up to 11! Fiddly fun for all the family, this game needs little explaination. Whether you\'re a player who chooses to play it safe, or one who lives life on the edge, eventually the removal of blocks will destabilise the tower and all your Jenga dreams come tumbling down.',
+        designer: 'Leslie Scott',
+        review_img_url: 'https://images.pexels.com/photos/4009761/pexels-photo-4009761.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260',
+        votes: 5,
+        category: 'dexterity',
+        owner: 'grumpy19',
+        created_at: '2021-01-18T10:01:41.251Z',
+        comment_count: "3"
+      }
+      expect(review.comment_count).toBe('3');
+  });
+});
   test('should return a 404 when passed an id which does not exist', () => {
     return request(app)
     .get("/api/reviews/100")
@@ -222,6 +332,7 @@ describe('POST /api/reviews/:review_id/comments', () => {
   });
   });
 
+
 describe('PATCH /api/reviews/:review_id', () => {
   test('should accept a positive number and update the votes property according to the number returning updated review', () => {
     const votes = {inc_votes: 5}
@@ -297,6 +408,63 @@ describe('PATCH /api/reviews/:review_id', () => {
       .expect(400)
       .then(({ body: { msg } }) => {
         expect(msg).toBe("Bad Request");
+      })
+    });
+  });
+
+describe('GET /api/users', () => {
+    test('should return an object with the key of users and an array of the user objects', () => {
+        return request(app)
+        .get("/api/users")
+        .expect(200)
+        .then(({ body }) => {
+            const { users } = body
+            const expected = {          
+            username: expect.any(String),
+            name: expect.any(String),
+            avatar_url: expect.any(String)
+            };
+            users.forEach(user => {
+              expect(user).toEqual(expect.objectContaining(expected))
+            });
+            expect(users.length).toBe(6);
+        })
+    });
+  });
+
+describe('DELETE /api/comments/:comment_id', () => {
+  test('should delete a comment by comment_id', () => {
+    return request(app)
+    .delete('/api/comments/61')
+    .expect(204)
+  });
+  test('should return a 404 when provided a non-existent ID', () => {
+    return request(app)
+    .delete('/api/comments/1000')
+    .expect(404)
+    .then(({ body: { msg } }) => {
+      expect(msg).toBe("ID Not Found");
+    })
+  });
+  test('should return an error when provided at invalid comment id', () => {
+        return request(app)
+    .delete('/api/comments/banana')
+    .expect(400)
+    .then(({ body: { msg } }) => {
+      expect(msg).toBe("Bad Request");
+    })
+    })
+  });
+
+  describe('GET /api', () => {
+    test('should return a JSON describing all the available endpoints', () => {
+      return request(app)
+      .get("/api")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body["GET /api"]).toEqual({
+          description: 'serves up a json representation of all the available endpoints of the api'
+        });
       })
     });
   });

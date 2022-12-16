@@ -1,7 +1,9 @@
 const { request, response } = require("../app");
 
-const { selectReviews, selectCategories, selectReview, selectComment, updateReview, insertComment } = require("../models/board-game-review-models");
-const { checkIfReviewIdExists, isIdValid, isCommentValid } = require('../controllers/controller_functions');
+
+const { selectReviews, selectCategories, selectReview, selectComment, insertComment, updateReview, selectUsers, removeComment, returnApi } = require("../models/board-game-review-models");
+const { checkIfReviewIdExists, isIdValid, isCommentValid, checkIfCategoryExists, checkIfCommentIdExists } = require('../controllers/controller_functions');
+
 
 exports.getCategories = (req, res, next) => {
     selectCategories()
@@ -14,8 +16,9 @@ exports.getCategories = (req, res, next) => {
 };
 
 exports.getReviews = (req, res, next) => {
-    selectReviews()
-    .then((reviews) => {
+const { category, sort_by, order } = req.query;
+    Promise.all([checkIfCategoryExists(category), selectReviews(category, sort_by, order)])
+    .then(([checkIfCategoryExists, reviews]) => {
         res.status(200).send({reviews})
     })
     .catch((err) => {
@@ -56,17 +59,50 @@ exports.postComment = (req, res, next) => {
     .catch((err) => {
         next(err)
     });
-  };
+};
 
-  exports.patchReview = (req, res, next) => {
+
+exports.patchReview = (req, res, next) => {
+
     const id = req.params.review_id;
     const votes = req.body
 
     Promise.all([checkIfReviewIdExists(id), updateReview(votes, id)])
     .then(([idExists, review]) => {
         res.status(200).send({review})
+     })
+    .catch((err) => {
+        next(err);
+    });
+};
+
+exports.getUsers = (req, res, next) => {
+    selectUsers()
+    .then((users) => {
+        res.status(200).send({users})
     })
     .catch((err) => {
         next(err);
     });
+};
+
+exports.deleteComment = (req, res, next) => {
+    const id = req.params.comment_id
+    Promise.all([checkIfCommentIdExists(id), removeComment(id)])
+    .then(([checkIfCommentIdExists, comment]) =>{
+        res.status(204).send()
+    })
+    .catch((err) => {
+        next(err);
+    });
+};
+
+exports.getApi = (req, res, next) => {
+    returnApi()
+    .then((endPoints) => {
+        res.status(200).send(endPoints)
+    })
+    .catch((err) => {
+        next(err);
+    });  
 };
