@@ -29,12 +29,13 @@ if (category !== undefined){
     queryString = queryString.replace(`GROUP BY reviews.review_id`, ` WHERE category = $1 
     GROUP BY reviews.review_id`)
     queryValues.push(category);
-} else if (validSortByQueries.includes(sortBy)){
-    queryString += ` ORDER BY ${sortBy} ${order};`
-} else {
-    queryString += ';'
 }
 
+if (validSortByQueries.includes(sortBy)){
+    queryString += ` ORDER BY ${sortBy} ${order};`
+}
+
+    queryString += ';'
     return  db
             .query(queryString, queryValues)
             .then(({ rows }) => rows)
