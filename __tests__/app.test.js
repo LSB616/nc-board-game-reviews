@@ -66,6 +66,94 @@ describe('GET /api/reviews', () => {
       })
     });
   })
+  test('should accept a category query returning all reviews relevant to that category', () => {
+    return request(app)
+    .get('/api/reviews?category=strategy')
+    .expect(200)
+    .then(( { body: { reviews } }) => {
+      reviews.forEach(review => {
+        expect(review.category).toBe('strategy')
+      })
+      expect(reviews).toHaveLength(6);
+    })
+  });
+  test('should accept a sort by query of owner', () => {
+    return request(app)
+    .get("/api/reviews?sort_by=owner")
+    .expect(200)
+    .then(( { body: { reviews } }) => {
+      expect(reviews).toBeSortedBy('owner', {
+        descending: true});
+    })
+  });
+  test('should accept a sort by query of title', () => {
+    return request(app)
+    .get("/api/reviews?sort_by=title")
+    .expect(200)
+    .then(( { body: { reviews } }) => {
+      expect(reviews).toBeSortedBy('title', {
+        descending: true});
+    })
+  });
+  test('should accept a sort by query of category', () => {
+    return request(app)
+    .get("/api/reviews?sort_by=category")
+    .expect(200)
+    .then(( { body: { reviews } }) => {
+      expect(reviews).toBeSortedBy('category', {
+        descending: true});
+    })
+  });
+  test('should accept a sort by query of designer', () => {
+    return request(app)
+    .get("/api/reviews?sort_by=designer")
+    .expect(200)
+    .then(( { body: { reviews } }) => {
+      expect(reviews).toBeSortedBy('designer', {
+        descending: true});
+    })
+  });
+  test('should accept a sort by query of created_at', () => {
+    return request(app)
+    .get("/api/reviews?sort_by=created_at")
+    .expect(200)
+    .then(( { body: { reviews } }) => {
+      expect(reviews).toBeSortedBy('created_at', {
+        descending: true});
+    })
+  });
+  test('should allow client to sort by asc', () => {
+    return request(app)
+    .get("/api/reviews?order=asc")
+    .expect(200)
+    .then(( { body: { reviews } }) => {
+      expect(reviews).toBeSortedBy('created_at');
+    })
+  });
+  test('should result in a 404 request if passed an non-existant category', () => {
+    return request(app)
+    .get('/api/reviews?category=YEET')
+    .expect(404)
+    .then(({ body: { msg } }) => {
+      expect(msg).toBe('Category Does Not Exist');
+  });
+  });
+  test('should not allow result to be sorted by an invalid query and should return a 400', () => {
+    return request(app)
+    .get("/api/reviews?sort_by=invalid")
+    .expect(400)
+    .then(({ body: { msg } }) => {
+      expect(msg).toBe('Bad Request');
+  });
+  });
+  test('should not allow result to be ordered by an invalid query and should return a 400', () => {
+    return request(app)
+    .get("/api/reviews?order=invalid")
+    .expect(400)
+    .then(({ body: { msg } }) => {
+      expect(msg).toBe('Bad Request');
+  });
+  });
 });
 
 
@@ -302,67 +390,7 @@ describe('PATCH /api/reviews/:review_id', () => {
     });
   });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  describe('GET /api/users', () => {
+describe('GET /api/users', () => {
     test('should return an object with the key of users and an array of the category objects', () => {
         return request(app)
         .get("/api/users")

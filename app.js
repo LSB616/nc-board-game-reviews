@@ -12,10 +12,6 @@ app.get('/api/reviews/:review_id', getReview)
 app.get('/api/reviews/:review_id/comments', getComments)
 app.post('/api/reviews/:review_id/comments', postComment)
 app.patch('/api/reviews/:review_id', patchReview)
-
-
-
-
 app.get('/api/users', getUsers)
 app.delete('/api/comments/:comment_id', deleteComment)
 
