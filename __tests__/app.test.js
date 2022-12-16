@@ -432,15 +432,39 @@ describe('GET /api/users', () => {
     });
   });
 
-describe('GET /api', () => {
-  test('should return a JSON describing all the available endpoints', () => {
+describe('DELETE /api/comments/:comment_id', () => {
+  test('should delete a comment by comment_id', () => {
     return request(app)
-    .get("/api")
-    .expect(200)
-    .then(({ body }) => {
-      expect(body["GET /api"]).toEqual({
-        description: 'serves up a json representation of all the available endpoints of the api'
-      });
+    .delete('/api/comments/61')
+    .expect(204)
+  });
+  test('should return a 404 when provided a non-existent ID', () => {
+    return request(app)
+    .delete('/api/comments/1000')
+    .expect(404)
+    .then(({ body: { msg } }) => {
+      expect(msg).toBe("ID Not Found");
     })
   });
-});
+  test('should return an error when provided at invalid comment id', () => {
+        return request(app)
+    .delete('/api/comments/banana')
+    .expect(400)
+    .then(({ body: { msg } }) => {
+      expect(msg).toBe("Bad Request");
+    })
+    })
+  });
+
+  describe('GET /api', () => {
+    test('should return a JSON describing all the available endpoints', () => {
+      return request(app)
+      .get("/api")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body["GET /api"]).toEqual({
+          description: 'serves up a json representation of all the available endpoints of the api'
+        });
+      })
+    });
+  });

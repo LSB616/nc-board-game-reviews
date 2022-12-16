@@ -1,8 +1,8 @@
 const { request, response } = require("../app");
 
 
-const { selectReviews, selectCategories, selectReview, selectComment, insertComment, updateReview, selectUsers, returnApi } = require("../models/board-game-review-models");
-const { checkIfReviewIdExists, isIdValid, isCommentValid, checkIfCategoryExists } = require('../controllers/controller_functions');
+const { selectReviews, selectCategories, selectReview, selectComment, insertComment, updateReview, selectUsers, removeComment, returnApi } = require("../models/board-game-review-models");
+const { checkIfReviewIdExists, isIdValid, isCommentValid, checkIfCategoryExists, checkIfCommentIdExists } = require('../controllers/controller_functions');
 
 
 exports.getCategories = (req, res, next) => {
@@ -84,15 +84,16 @@ exports.getUsers = (req, res, next) => {
     });
 };
 
-
-
-
-
-
-
-
-
-
+exports.deleteComment = (req, res, next) => {
+    const id = req.params.comment_id
+    Promise.all([checkIfCommentIdExists(id), removeComment(id)])
+    .then(([checkIfCommentIdExists, comment]) =>{
+        res.status(204).send()
+    })
+    .catch((err) => {
+        next(err);
+    });
+};
 
 exports.getApi = (req, res, next) => {
     returnApi()
