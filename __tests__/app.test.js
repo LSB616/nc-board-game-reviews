@@ -1,6 +1,12 @@
 const request = require("supertest");
 const db = require("../db/connection");
 const app = require("../app");
+const seed = require('../db/seeds/seed');
+const testData = require('../db/data/test-data')
+
+beforeEach(() => {
+  return seed(testData);
+});
 
 afterAll(() => {
   if (db.end) db.end();
@@ -32,7 +38,7 @@ describe('GET /api/categories', () => {
             categories.forEach(category => {
               expect(category).toEqual(expect.objectContaining(expected))
             });
-            expect(categories.length).toBe(7);
+            expect(categories.length).toBe(4);
         })
     });
 });
@@ -58,9 +64,9 @@ describe('GET /api/reviews', () => {
       reviews.forEach(review => {
       expect(review).toEqual(expect.objectContaining(expected))
       });
-      expect(reviews.length).toBe(24);
+      expect(reviews.length).toBe(13);
       const countTest = reviews.filter(review => review.review_id === 3)
-      expect(countTest[0].comment_count).toBe('5');
+      expect(countTest[0].comment_count).toBe('3');
       expect(reviews).toBeSortedBy('created_at', {
         descending: true
       })
@@ -68,13 +74,13 @@ describe('GET /api/reviews', () => {
   })
   test('should accept a category query returning all reviews relevant to that category', () => {
     return request(app)
-    .get('/api/reviews?category=strategy')
+    .get('/api/reviews?category=dexterity')
     .expect(200)
     .then(( { body: { reviews } }) => {
       reviews.forEach(review => {
-        expect(review.category).toBe('strategy')
+        expect(review.category).toBe('dexterity')
       })
-      expect(reviews).toHaveLength(6);
+      expect(reviews).toHaveLength(1);
     })
   });
   test('should accept a sort by query of owner', () => {
@@ -86,15 +92,15 @@ describe('GET /api/reviews', () => {
         descending: true});
     })
   });
-  test('should accept a sort by query of title', () => {
-    return request(app)
-    .get("/api/reviews?sort_by=title")
-    .expect(200)
-    .then(( { body: { reviews } }) => {
-      expect(reviews).toBeSortedBy('title', {
-        descending: true});
-    })
-  });
+  // test('should accept a sort by query of title', () => {
+  //   return request(app)
+  //   .get("/api/reviews?sort_by=title")
+  //   .expect(200)
+  //   .then(( { body: { reviews } }) => {
+  //     expect(reviews).toBeSortedBy('title', {
+  //       descending: true});
+  //   })
+  // });
   test('should accept a sort by query of category', () => {
     return request(app)
     .get("/api/reviews?sort_by=category")
@@ -160,20 +166,20 @@ describe('GET /api/reviews', () => {
 describe('GET /api/reviews/:review_id', () => {
   test('should return a review object based upon the specified review id', () => {
     return request(app)
-    .get("/api/reviews/1")
+    .get("/api/reviews/2")
     .expect(200)
     .then(({ body }) => {
       const { review } = body
       const expected = {
-        review_id: 1,
-        title: 'Culture a Love of Agriculture With Agricola',
-        review_body: 'You could sum up Agricola with the simple phrase \'Farmyeard Fun\' but the mechanics and game play add so much more than that. You\'ll find yourself torn between breeding pigs, or sowing crops. Its joyeous and rewarding and it makes you think of time spent outside, which is much harder to do these days!',
-        designer: 'Uwe Rosenberg',
-        review_img_url: 'https://images.pexels.com/photos/4917821/pexels-photo-4917821.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260',
-        votes: 1,
-        category: 'strategy',
-        owner: 'tickle122',
-        created_at: '2021-01-18T10:00:20.514Z',
+        review_id: 2,
+        title: 'Jenga',
+        review_body: 'Fiddly fun for all the family',
+        designer: 'Leslie Scott',
+        review_img_url: 'https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png',
+        votes: 5,
+        category: 'dexterity',
+        owner: 'philippaclaire9',
+        created_at: '2021-01-18T10:01:41.251Z',
         comment_count: "3"
       }
     expect(review).toEqual(expect.objectContaining(expected));
@@ -181,7 +187,7 @@ describe('GET /api/reviews/:review_id', () => {
   });
   test('should expect an accurate count of the comments associated with the review id', () => {
     return request(app)
-    .get("/api/reviews/1")
+    .get("/api/reviews/2")
     .expect(200)
     .then(({ body }) => {
       const { review } = body
@@ -222,7 +228,7 @@ describe('GET /api/reviews/:review_id', () => {
 describe('GET /api/reviews/:review_id/comments', () => {
   test('should return an array of comments for the provided review_id', () => {
     return request(app)
-      .get("/api/reviews/1/comments")
+      .get("/api/reviews/2/comments")
       .expect(200)
       .then(({ body }) => {
         const { comments } = body;
@@ -237,9 +243,9 @@ describe('GET /api/reviews/:review_id/comments', () => {
       comments.forEach(comment => {
         expect(comment).toEqual(expect.objectContaining(expected))
       })
-      expect(comments[0].review_id).toBe(1);
-      expect(comments[1].review_id).toBe(1);
-      expect(comments[2].review_id).toBe(1);
+      expect(comments[0].review_id).toBe(2);
+      expect(comments[1].review_id).toBe(2);
+      expect(comments[2].review_id).toBe(2);
       expect(comments).toBeSortedBy('created_at', {
         descending: true
       })
@@ -265,12 +271,12 @@ describe('GET /api/reviews/:review_id/comments', () => {
 
 describe('POST /api/reviews/:review_id/comments', () => {
   const newComment = {
-    username: 'weegembump',
+    username: 'bainesface',
     body: 'Not Enough DICE!!!!'
   }
   test('should add a comment to the database and respond wiht the newly created comment', () => {
     return request(app)
-    .post("/api/reviews/1/comments")
+    .post("/api/reviews/2/comments")
     .send(newComment)
     .expect(201)
     .then(({ body }) => {
@@ -278,8 +284,8 @@ describe('POST /api/reviews/:review_id/comments', () => {
       const expectedComment = [{
         comment_id: expect.any(Number),
         body: 'Not Enough DICE!!!!',
-        review_id: 1,
-        author: 'weegembump',
+        review_id: 2,
+        author: 'bainesface',
         votes: 0,
         created_at: expect.any(String)
       }]
@@ -337,18 +343,18 @@ describe('PATCH /api/reviews/:review_id', () => {
   test('should accept a positive number and update the votes property according to the number returning updated review', () => {
     const votes = {inc_votes: 5}
     const reviewFour = {
-      review_id: 4,
+      review_id: 8,
       title: 'One Night Ultimate Werewolf',
-      category: 'hidden-roles',
+      category: 'social deduction',
       designer: 'Akihisa Okui',
-      owner: 'happyamy2016',
+      owner: 'mallionaire',
       review_body: 'We couldn\'t find the werewolf!',
       review_img_url: 'https://images.pexels.com/photos/5350049/pexels-photo-5350049.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260',
       created_at: '2021-01-18T10:01:41.251Z',
       votes: 10
     }
     return request(app)
-    .patch('/api/reviews/4')
+    .patch('/api/reviews/8')
     .send(votes)
     .expect(200)
     .then(({ body }) => {
@@ -360,18 +366,18 @@ describe('PATCH /api/reviews/:review_id', () => {
   test('should accept a negative number and update the votes property according to the number returning updated review', () => {
     const votes = {inc_votes: -10}
     const reviewFour = {
-      review_id: 4,
+      review_id: 8,
       title: 'One Night Ultimate Werewolf',
-      category: 'hidden-roles',
+      category: 'social deduction',
       designer: 'Akihisa Okui',
-      owner: 'happyamy2016',
+      owner: 'mallionaire',
       review_body: 'We couldn\'t find the werewolf!',
       review_img_url: 'https://images.pexels.com/photos/5350049/pexels-photo-5350049.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260',
       created_at: '2021-01-18T10:01:41.251Z',
-      votes: 0
+      votes: -5
     }
     return request(app)
-    .patch('/api/reviews/4')
+    .patch('/api/reviews/8')
     .send(votes)
     .expect(200)
     .then(({ body }) => {
@@ -427,7 +433,7 @@ describe('GET /api/users', () => {
             users.forEach(user => {
               expect(user).toEqual(expect.objectContaining(expected))
             });
-            expect(users.length).toBe(6);
+            expect(users.length).toBe(4);
         })
     });
   });
@@ -435,7 +441,7 @@ describe('GET /api/users', () => {
 describe('DELETE /api/comments/:comment_id', () => {
   test('should delete a comment by comment_id', () => {
     return request(app)
-    .delete('/api/comments/61')
+    .delete('/api/comments/6')
     .expect(204)
   });
   test('should return a 404 when provided a non-existent ID', () => {
@@ -455,6 +461,31 @@ describe('DELETE /api/comments/:comment_id', () => {
     })
     })
   });
+
+  // describe('GET /api/users/:username', () => {
+  //   test('should return a user object based upon the specified username', () => {
+  //     return request(app)
+  //     .get("/api/users/tickle122")
+  //     .expect(200)
+  //     .then(({ body }) => {
+  //       const { user } = body
+  //       const expected = {
+  //         username: "tickle122",
+  //         name: "Tom Tickle",
+  //         avatar_url: "https://vignette.wikia.nocookie.net/mrmen/images/d/d6/Mr-Tickle-9a.png/revision/latest?cb=20180127221953"
+  //       }
+  //     expect(user).toEqual(expect.objectContaining(expected));
+  //     })
+  //   });
+  //   test('should return a 404 when passed a username which does not exist', () => {
+  //     return request(app)
+  //     .get("/api/users/bananaMan360")
+  //     .expect(404)
+  //     .then(({ body: { msg } }) => {
+  //       expect(msg).toBe('User Does Not Exist');
+  //     })
+  //   });
+  // });
 
   describe('GET /api', () => {
     test('should return a JSON describing all the available endpoints', () => {
