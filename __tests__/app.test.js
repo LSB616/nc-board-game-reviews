@@ -471,6 +471,32 @@ describe('DELETE /api/comments/:comment_id', () => {
     })
   });
 
+describe('GET /api/users/:username', () => {
+    test('should return a user object based upon the specified username', () => {
+      return request(app)
+      .get("/api/users/mallionaire")
+      .expect(200)
+      .then(({ body }) => {
+        const { user } = body
+        const expected = {
+          username: "mallionaire",
+          name: "haz",
+          avatar_url: "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
+        }
+      expect(user).toEqual(expect.objectContaining(expected));
+      })
+    });
+    test('should return a 404 when passed a username which does not exist', () => {
+      return request(app)
+      .get("/api/users/bananaMan360")
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe('User Does Not Exist');
+      })
+    });
+  });
+
+
   describe('GET /api', () => {
     test('should return a JSON describing all the available endpoints', () => {
       return request(app)

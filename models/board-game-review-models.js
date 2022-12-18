@@ -109,3 +109,10 @@ exports.returnApi = () => {
     return fs.readFile(`./endpoints.json`, 'utf-8')
     .then((endPoints) => JSON.parse(endPoints))
 }
+
+exports.selectUser = (username) => {
+    return  db
+            .query(`SELECT * FROM users WHERE username = $1`, [username])
+            .then(({ rows }) => rows[0])
+
+};

@@ -1,8 +1,8 @@
 const { request, response } = require("../app");
 
 
-const { selectReviews, selectCategories, selectReview, selectComment, insertComment, updateReview, selectUsers, removeComment, returnApi } = require("../models/board-game-review-models");
-const { checkIfReviewIdExists, isIdValid, isCommentValid, checkIfCategoryExists, checkIfCommentIdExists } = require('../controllers/controller_functions');
+const { selectReviews, selectCategories, selectReview, selectComment, insertComment, updateReview, selectUsers, removeComment, returnApi, selectUser } = require("../models/board-game-review-models");
+const { checkIfReviewIdExists, isIdValid, isCommentValid, checkIfCategoryExists, checkIfCommentIdExists, checkIfUserExists } = require('../controllers/controller_functions');
 
 
 exports.getCategories = (req, res, next) => {
@@ -106,3 +106,15 @@ exports.getApi = (req, res, next) => {
         next(err);
     });  
 };
+
+exports.getUser = (req, res, next) => {
+    const username = req.params.username
+
+    Promise.all([checkIfUserExists(username), selectUser(username)])
+    .then(([checkIfUserExists ,user]) => {
+        res.status(200).send({user})
+    })
+    .catch((err) => {
+        next(err);
+    });
+}
