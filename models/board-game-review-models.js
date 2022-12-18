@@ -34,9 +34,11 @@ if (category !== undefined){
     queryValues.push(category);
 }
 
-if (validSortByQueries.includes(sortBy)){
-    queryString += ` ORDER BY ${sortBy} ${order};`
-}
+if (validSortByQueries.includes(sortBy) && sortBy === 'title'){
+    queryString += ` ORDER BY ${sortBy} COLLATE "C" ${order}`
+} else if (validSortByQueries.includes(sortBy) && sortBy !== 'title') {
+    queryString += ` ORDER BY ${sortBy} ${order}`
+};
 
     queryString += ';'
     return  db
@@ -53,15 +55,19 @@ exports.selectReview = (id) => {
             .query(`SELECT reviews.owner, reviews.title, reviews.review_id, reviews.category, 
             reviews.review_img_url, reviews.created_at, reviews.votes, reviews.review_body, reviews.designer,
             COUNT(comments.review_id)
-            AS comment_count 
+            AS comment_count
             FROM reviews 
             LEFT JOIN comments 
-            ON reviews.review_id = comments.review_id
+            ON reviews.review_id = comments.review_id 
             WHERE comments.review_id = $1
             GROUP BY reviews.review_id;`, [id])
             .then(({ rows }) => {
             return rows[0]});
 };
+
+
+
+
 
 exports.selectComment = (id) => {
     return  db

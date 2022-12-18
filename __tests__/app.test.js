@@ -92,15 +92,15 @@ describe('GET /api/reviews', () => {
         descending: true});
     })
   });
-  // test('should accept a sort by query of title', () => {
-  //   return request(app)
-  //   .get("/api/reviews?sort_by=title")
-  //   .expect(200)
-  //   .then(( { body: { reviews } }) => {
-  //     expect(reviews).toBeSortedBy('title', {
-  //       descending: true});
-  //   })
-  // });
+  test('should accept a sort by query of title', () => {
+    return request(app)
+    .get("/api/reviews?sort_by=title")
+    .expect(200)
+    .then(( { body: { reviews } }) => {
+      expect(reviews).toBeSortedBy('title', {
+        descending: true});
+    })
+  });
   test('should accept a sort by query of category', () => {
     return request(app)
     .get("/api/reviews?sort_by=category")
@@ -206,6 +206,15 @@ describe('GET /api/reviews/:review_id', () => {
       expect(review.comment_count).toBe('3');
   });
 });
+// test.only('should return an accurate comment_count when no comments exist', () => {
+//   return request(app)
+//   .get("/api/reviews/1")
+//   .expect(200)
+//   .then(({ body }) => {
+//     const { review } = body
+//     expect(review.comment_count).toBe('0');
+// });
+// });
   test('should return a 404 when passed an id which does not exist', () => {
     return request(app)
     .get("/api/reviews/100")
@@ -461,31 +470,6 @@ describe('DELETE /api/comments/:comment_id', () => {
     })
     })
   });
-
-  // describe('GET /api/users/:username', () => {
-  //   test('should return a user object based upon the specified username', () => {
-  //     return request(app)
-  //     .get("/api/users/tickle122")
-  //     .expect(200)
-  //     .then(({ body }) => {
-  //       const { user } = body
-  //       const expected = {
-  //         username: "tickle122",
-  //         name: "Tom Tickle",
-  //         avatar_url: "https://vignette.wikia.nocookie.net/mrmen/images/d/d6/Mr-Tickle-9a.png/revision/latest?cb=20180127221953"
-  //       }
-  //     expect(user).toEqual(expect.objectContaining(expected));
-  //     })
-  //   });
-  //   test('should return a 404 when passed a username which does not exist', () => {
-  //     return request(app)
-  //     .get("/api/users/bananaMan360")
-  //     .expect(404)
-  //     .then(({ body: { msg } }) => {
-  //       expect(msg).toBe('User Does Not Exist');
-  //     })
-  //   });
-  // });
 
   describe('GET /api', () => {
     test('should return a JSON describing all the available endpoints', () => {
