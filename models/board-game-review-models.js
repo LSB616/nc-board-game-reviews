@@ -48,9 +48,6 @@ if (validSortByQueries.includes(sortBy) && sortBy === 'title'){
 
 
 exports.selectReview = (id) => {
-
-
-
     return  db
             .query(`SELECT reviews.owner, reviews.title, reviews.review_id, reviews.category, 
             reviews.review_img_url, reviews.created_at, reviews.votes, reviews.review_body, reviews.designer,
@@ -114,5 +111,12 @@ exports.selectUser = (username) => {
     return  db
             .query(`SELECT * FROM users WHERE username = $1`, [username])
             .then(({ rows }) => rows[0])
+};
 
+exports.updateComment = (votes, id) => {
+    return  db
+            .query(`UPDATE comments SET votes = $1 + (SELECT votes FROM comments WHERE comment_id = $2) WHERE comment_id = $2 RETURNING *;`, [votes.inc_votes, id])
+            .then(({ rows }) => {
+                return rows[0];
+            });
 };
