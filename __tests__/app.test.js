@@ -206,11 +206,12 @@ describe('GET /api/reviews/:review_id', () => {
       expect(review.comment_count).toBe('3');
   });
 });
-// test.only('should return an accurate comment_count when no comments exist', () => {
+// test('should return an accurate comment_count when no comments exist', () => {
 //   return request(app)
 //   .get("/api/reviews/1")
 //   .expect(200)
 //   .then(({ body }) => {
+//     console.log(body)
 //     const { review } = body
 //     expect(review.comment_count).toBe('0');
 // });
@@ -314,9 +315,9 @@ describe('POST /api/reviews/:review_id/comments', () => {
     return request(app)
     .post("/api/reviews/1000/comments")
     .send(newComment)
-    .expect(404)
+    .expect(400)
     .then(({ body: { msg } }) => {
-      expect(msg).toBe("Resource Not Found");
+      expect(msg).toBe("Invalid Values");
     })
   });
   test('should return 404 when user not found', () => {
@@ -327,10 +328,10 @@ describe('POST /api/reviews/:review_id/comments', () => {
     return request(app)
     .post("/api/reviews/1/comments")
     .send(invalidComment)
-    .expect(404)
+    .expect(400)
     .then(({ body: { msg } }) => {
-      expect(msg).toBe("Resource Not Found");
-    })
+      expect(msg).toBe("Invalid Values");
+    });
   });
   test('should return a 400 when provided an incomplete dataset', () => {
     const incompleteComment = {
@@ -510,7 +511,7 @@ describe('GET /api/users/:username', () => {
     });
   });
 
-  describe('PATCH /api/comments/:comment_id', () => {
+describe('PATCH /api/comments/:comment_id', () => {
     test('should accept a positive number and update the votes property according to the number returning the updated comment', () => {
       const votes = {inc_votes: 5}
       const expected = {
@@ -581,4 +582,52 @@ describe('GET /api/users/:username', () => {
           expect(msg).toBe("Bad Request");
         })
       });
+  });
+
+describe('POST /api/reviews', () => {
+    const newReview = {
+      title: 'Catan',
+      owner: 'mallionaire',
+      review_body: 'It is like Risk for pacifists',
+      designer: 'Klaus Teuber',
+      category: 'euro game'
+    }
+    test('should add a review to the database and respond with the newly created review', () => {
+      return request(app)
+      .post("/api/reviews")
+      .send(newReview)
+      .expect(201)
+      .then(({ body }) => {
+        const { review } = body;
+        const expectedReview = {
+          review_id: 14,
+          owner: 'mallionaire',
+          title: 'Catan',
+          review_body: 'It is like Risk for pacifists',
+          designer: 'Klaus Teuber',
+          category: 'euro game',
+          votes: 0,
+          created_at: expect.any(String),
+          comment_count: 0,
+          review_img_url: expect.any(String)
+        }
+        expect(review).toEqual(expect.objectContaining(expectedReview));
+      })
+    });
+    test('should return a 400 when provided an incomplete dataset', () => {
+      const incompleteReview = {
+        title: 'Catan',
+        owner: 'mallionaire',
+        review_body: 'It is like Risk for pacifists',
+        designer: '',
+        category: ''
+      }
+      return request(app)
+      .post("/api/reviews")
+      .send(incompleteReview)
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Invalid Values");
+      })
+    });
     });
