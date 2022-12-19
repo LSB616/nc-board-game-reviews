@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 app.use(express.json());
-const { getReviews, getCategories, getReview, getComments, postComment, patchReview, getUsers, getApi, deleteComment, getUser, patchComment } = require('./controllers/board-game-review-controllers')
+const { getReviews, getCategories, getReview, getComments, postComment, patchReview, getUsers, getApi, deleteComment, getUser, patchComment, postReview } = require('./controllers/board-game-review-controllers')
 const { handle500Paths, handle404Paths, handleCustomErrors, handlesPsqlErrors } = require('./controllers/controllers.errors');
 
 app.get('/api/reviews', getReviews)
@@ -14,7 +14,7 @@ app.delete('/api/comments/:comment_id', deleteComment)
 app.get('/api/users', getUsers)
 app.get('/api/users/:username', getUser)
 app.patch('/api/comments/:comment_id', patchComment)
-
+app.post('/api/reviews', postReview)
 
 
 

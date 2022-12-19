@@ -120,3 +120,14 @@ exports.updateComment = (votes, id) => {
                 return rows[0];
             });
 };
+
+exports.insertReview = (review) => {
+    const { owner, title, review_body, designer, category } = review;
+    return  db
+            .query(`INSERT INTO reviews (owner, title, review_body, designer, category) VALUES ($1, $2, $3, $4, $5) RETURNING *;`,
+            [owner, title, review_body, designer, category])
+            .then(({ rows }) => {
+            return {...rows[0],
+            comment_count: 0}
+            });
+};
