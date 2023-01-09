@@ -1,10 +1,11 @@
+const cors = require('cors');
 const express = require('express');
 const app = express();
-app.use(express.json());
 app.use(cors());
+app.use(express.json());
 const { getReviews, getCategories, getReview, getComments, postComment, patchReview, getUsers, getApi, deleteComment, getUser, patchComment, postReview } = require('./controllers/board-game-review-controllers')
 const { handle500Paths, handle404Paths, handleCustomErrors, handlesPsqlErrors } = require('./controllers/controllers.errors');
-const cors = require('cors');
+
 
 app.get('/api/reviews', getReviews)
 app.get('/api/categories', getCategories)
