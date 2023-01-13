@@ -56,7 +56,7 @@ exports.selectReview = (id) => {
             FROM reviews 
             LEFT JOIN comments 
             ON reviews.review_id = comments.review_id 
-            WHERE comments.review_id = $1
+            WHERE reviews.review_id = $1
             GROUP BY reviews.review_id;`, [id])
             .then(({ rows }) => {
             return rows[0]});
