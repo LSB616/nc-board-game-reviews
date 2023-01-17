@@ -1,7 +1,7 @@
 const { request, response } = require("../app");
 
 
-const { selectReviews, selectCategories, selectReview, selectComment, insertComment, updateReview, selectUsers, removeComment, returnApi, selectUser, updateComment, insertReview } = require("../models/board-game-review-models");
+const { selectReviews, selectCategories, selectReview, selectComment, insertComment, updateReview, selectUsers, removeComment, returnApi, selectUser, updateComment, insertReview, removeReview } = require("../models/board-game-review-models");
 const { checkIfReviewIdExists, isIdValid, isCommentValid, checkIfCategoryExists, checkIfCommentIdExists, checkIfUserExists } = require('../controllers/controller_functions');
 
 
@@ -136,6 +136,20 @@ exports.postReview = (req, res, next) => {
     insertReview(review)
     .then((review) => {
         res.status(201).send({ review })
+    })
+    .catch((err) => {
+        next(err);
+    });
+};
+
+exports.deleteReview = (req, res, next) => {
+    const id = req.params.review_id;
+
+    
+
+    Promise.all([checkIfReviewIdExists(id), removeReview(id)])
+    .then(([checkIfReviewIdExists, review]) => {
+        res.status(204).send()
     })
     .catch((err) => {
         next(err);

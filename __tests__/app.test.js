@@ -631,3 +631,27 @@ describe('POST /api/reviews', () => {
       })
     });
     });
+
+    describe('DELETE /api/reviews/:review_id', () => {
+      test('should delete a review by review_id', () => {
+        return request(app)
+        .delete('/api/reviews/6')
+        .expect(204)
+      });
+      test('should return a 404 when provided a non-existent ID', () => {
+        return request(app)
+        .delete('/api/reviews/1000')
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("ID Not Found");
+        })
+      });
+      test('should return an error when provided at invalid comment id', () => {
+            return request(app)
+        .delete('/api/reviews/banana')
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Bad Request");
+        })
+        })
+      });

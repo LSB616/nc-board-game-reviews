@@ -68,4 +68,3 @@ exports.checkIfUserExists = (username) => {
                 };
             });
 };
-

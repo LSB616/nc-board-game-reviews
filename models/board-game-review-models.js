@@ -131,3 +131,9 @@ exports.insertReview = (review) => {
             comment_count: 0}
             });
 };
+
+exports.removeReview = (id) => {
+    return  db
+            .query(`DELETE FROM reviews WHERE review_id = $1;`, [id])
+            .then(({ rows }) => rows)
+}
