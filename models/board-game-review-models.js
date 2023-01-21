@@ -62,10 +62,6 @@ exports.selectReview = (id) => {
             return rows[0]});
 };
 
-
-
-
-
 exports.selectComment = (id) => {
     return  db
             .query(`SELECT * FROM comments WHERE review_id = $1 ORDER BY created_at DESC`, [id])
@@ -82,13 +78,22 @@ exports.insertComment = (comment, id) => {
             });
 };
 
-exports.updateReview = (votes, id) => {
+exports.updateReviewVotes = (votes, id) => {
     return  db
             .query(`UPDATE reviews SET votes = $1 + (SELECT votes FROM reviews WHERE review_id = $2) WHERE review_id = $2 RETURNING *;`, [votes.inc_votes, id])
             .then(({ rows }) => {
                 return rows[0];
             });
 };
+
+exports.updateReview = (updatedReview, id) => {
+    const { title, category, designer, review_body, review_img_url } = updatedReview;
+    return  db
+            .query(`UPDATE reviews SET title = $1, category = $2, designer = $3, review_body = $4, review_img_url = $5 WHERE review_id = $6 RETURNING *;`, [title, category, designer, review_body, review_img_url, id])
+            .then(({ rows }) => {
+                return rows[0]
+            });
+}
 
 exports.selectUsers = () => {
     return  db
