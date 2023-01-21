@@ -428,6 +428,72 @@ describe('PATCH /api/reviews/:review_id', () => {
     });
   });
 
+describe('PATCH /api/reviews/:review_id/edit-review', () => {
+  const reviewUpdate = {      
+    review_id: 8,
+    title: 'One Night Ultimate Werewolf: The New Review',
+    category: 'social deduction',
+    designer: 'Akihisa Okui',
+    owner: 'mallionaire',
+    review_body: 'We couldn\'t find the werewolf! But then we found the werewolf! La CHANCE!!!',
+    review_img_url: 'https://images.pexels.com/photos/5350049/pexels-photo-5350049.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260',
+    created_at: '2021-01-18T10:01:41.251Z',
+    votes: 5}
+  test('should accept updated review data and return an updated review object', () => {
+    const reviewFour = {
+      review_id: 8,
+      title: 'One Night Ultimate Werewolf: The New Review',
+      category: 'social deduction',
+      designer: 'Akihisa Okui',
+      owner: 'mallionaire',
+      review_body: 'We couldn\'t find the werewolf! But then we found the werewolf! La CHANCE!!!',
+      review_img_url: 'https://images.pexels.com/photos/5350049/pexels-photo-5350049.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260',
+      created_at: '2021-01-18T10:01:41.251Z',
+      votes: 5
+    }
+    return request(app)
+    .patch('/api/reviews/8/edit-review')
+    .send(reviewUpdate)
+    .expect(200)
+    .then(({ body }) => {
+      expect(body).toEqual({
+        ...reviewFour
+      })
+    })
+  });
+  test('should respond with a 400 when provided with an invalid id', () => {
+    return request(app)
+    .patch('/api/reviews/banana/edit-review')
+    .send(reviewUpdate)
+    .expect(400)
+    .then(({ body: { msg } }) => {
+      expect(msg).toBe("Bad Request");
+    })
+    })
+    test('should respond with a 404 when id not found', () => {
+      return request(app)
+      .patch('/api/reviews/1000/edit-review')
+      .send(reviewUpdate)
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe('ID Not Found');
+      })
+    });
+    test('should respond with a 400 when provided an incorrect dataset', () => {
+      const incompleteReview = {
+        review_id: 8,
+        review_body: 'We couldn\'t find the werewolf! But then we found the werewolf! La CHANCE!!!',
+        review_img_url: 'https://images.pexels.com/photos/5350049/pexels-photo-5350049.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260',
+        created_at: '2021-01-18T10:01:41.251Z',
+        votes: 5
+      }
+      return request(app)
+      .patch('/api/reviews/4/edit-review')
+      .send(incompleteReview)
+      .expect(500)
+    });
+  });
+
 describe('GET /api/users', () => {
     test('should return an object with the key of users and an array of the user objects', () => {
         return request(app)

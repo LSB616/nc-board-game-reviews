@@ -1,7 +1,7 @@
 const { request, response } = require("../app");
 
 
-const { selectReviews, selectCategories, selectReview, selectComment, insertComment, updateReview, selectUsers, removeComment, returnApi, selectUser, updateComment, insertReview, removeReview } = require("../models/board-game-review-models");
+const { selectReviews, selectCategories, selectReview, selectComment, insertComment, updateReviewVotes, updateReview, selectUsers, removeComment, returnApi, selectUser, updateComment, insertReview, removeReview } = require("../models/board-game-review-models");
 const { checkIfReviewIdExists, isIdValid, isCommentValid, checkIfCategoryExists, checkIfCommentIdExists, checkIfUserExists } = require('../controllers/controller_functions');
 
 
@@ -62,11 +62,11 @@ exports.postComment = (req, res, next) => {
 };
 
 
-exports.patchReview = (req, res, next) => {
+exports.patchReviewVotes = (req, res, next) => {
     const id = req.params.review_id;
     const votes = req.body
 
-    Promise.all([checkIfReviewIdExists(id), updateReview(votes, id)])
+    Promise.all([checkIfReviewIdExists(id), updateReviewVotes(votes, id)])
     .then(([idExists, review]) => {
         res.status(200).send({review})
      })
@@ -74,6 +74,19 @@ exports.patchReview = (req, res, next) => {
         next(err);
     });
 };
+
+exports.patchReview = (req, res, next) => {
+    const id = req.params.review_id;
+    const updatedReview = req.body
+
+    Promise.all([checkIfReviewIdExists(id),updateReview(updatedReview, id)])
+    .then(([idExists, review]) => {
+        res.status(200).send(review)
+    })
+    .catch((err) => {
+        next(err);
+    });
+}
 
 exports.getUsers = (req, res, next) => {
     selectUsers()
