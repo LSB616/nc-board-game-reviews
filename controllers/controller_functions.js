@@ -68,3 +68,10 @@ exports.checkIfUserExists = (username) => {
                 };
             });
 };
+
+exports.checkIfNewUserDataIsValid = ({ username, name, avatar_url }) => {
+    if (username.length === 0 || name.length === 0 || avatar_url.length === 0) {
+        return Promise.reject({ status: 400, msg: 'Bad Request'})
+    }
+    return true;
+}

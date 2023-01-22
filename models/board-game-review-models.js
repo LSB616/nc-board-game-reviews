@@ -118,6 +118,15 @@ exports.selectUser = (username) => {
             .then(({ rows }) => rows[0])
 };
 
+exports.insertUser = (user) => {
+    const { username, name, avatar_url } = user;
+    return  db
+            .query(`INSERT INTO users (username, name, avatar_url) VALUES ($1, $2, $3) RETURNING *;`, [username, name, avatar_url])
+            .then(({ rows }) => {
+                return rows[0]
+            })
+}
+
 exports.updateComment = (votes, id) => {
     return  db
             .query(`UPDATE comments SET votes = $1 + (SELECT votes FROM comments WHERE comment_id = $2) WHERE comment_id = $2 RETURNING *;`, [votes.inc_votes, id])
