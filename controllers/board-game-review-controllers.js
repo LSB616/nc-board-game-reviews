@@ -1,8 +1,8 @@
 const { request, response } = require("../app");
 
 
-const { selectReviews, selectCategories, selectReview, selectComment, insertComment, updateReviewVotes, updateReview, selectUsers, removeComment, returnApi, selectUser, updateComment, insertReview, removeReview } = require("../models/board-game-review-models");
-const { checkIfReviewIdExists, isIdValid, isCommentValid, checkIfCategoryExists, checkIfCommentIdExists, checkIfUserExists } = require('../controllers/controller_functions');
+const { selectReviews, selectCategories, selectReview, selectComment, insertComment, updateReviewVotes, updateReview, selectUsers, removeComment, returnApi, selectUser, updateComment, insertReview, removeReview, insertUser } = require("../models/board-game-review-models");
+const { checkIfReviewIdExists, isIdValid, isCommentValid, checkIfCategoryExists, checkIfNewUserDataIsValid, checkIfCommentIdExists, checkIfUserExists } = require('../controllers/controller_functions');
 
 
 exports.getCategories = (req, res, next) => {
@@ -98,6 +98,17 @@ exports.getUsers = (req, res, next) => {
     });
 };
 
+exports.postUser = (req, res, next) => {
+    const newUser = req.body
+    Promise.all([checkIfNewUserDataIsValid(newUser), insertUser(newUser)])
+    .then(([checkIfNewUserDataIsValid, user]) => {
+        res.status(201).send(user);
+    })
+    .catch((err) => {
+        next(err);
+    })
+};
+
 exports.deleteComment = (req, res, next) => {
     const id = req.params.comment_id
     Promise.all([checkIfCommentIdExists(id), removeComment(id)])
@@ -121,7 +132,6 @@ exports.getApi = (req, res, next) => {
 
 exports.getUser = (req, res, next) => {
     const username = req.params.username
-
     Promise.all([checkIfUserExists(username), selectUser(username)])
     .then(([checkIfUserExists ,user]) => {
         res.status(200).send({user})
@@ -157,9 +167,6 @@ exports.postReview = (req, res, next) => {
 
 exports.deleteReview = (req, res, next) => {
     const id = req.params.review_id;
-
-    
-
     Promise.all([checkIfReviewIdExists(id), removeReview(id)])
     .then(([checkIfReviewIdExists, review]) => {
         res.status(204).send()

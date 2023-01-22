@@ -348,7 +348,6 @@ describe('POST /api/reviews/:review_id/comments', () => {
   });
   });
 
-
 describe('PATCH /api/reviews/:review_id', () => {
   test('should accept a positive number and update the votes property according to the number returning updated review', () => {
     const votes = {inc_votes: 5}
@@ -514,6 +513,42 @@ describe('GET /api/users', () => {
     });
   });
 
+describe('POST /api/create-account', () => {
+  test('should receive a user object and return the newly created user object', () => {
+    const newUser = {
+      username: 'BillyBob',
+      name: 'Bob',
+      avatar_url: 'https://www.giantbomb.com/a/uploads/scale_small/0/9493/2498107-cletus.gif'
+    }
+    return request(app)
+    .post("/api/create-account")
+    .send(newUser)
+    .expect(201)
+    .then(({ body }) => {
+      const expectedUser = {
+        username: 'BillyBob',
+        name: 'Bob',
+        avatar_url: 'https://www.giantbomb.com/a/uploads/scale_small/0/9493/2498107-cletus.gif'
+      }
+    expect(body).toEqual(expect.objectContaining(expectedUser))
+    })
+  });
+  test('should return a 400 when provided an incomplete dataset', () => {
+    const incompleteUser = {
+      username: "blah",
+      name: '',
+      avatar_url: ''
+    }
+    return request(app)
+    .post('/api/create-account')
+    .send(incompleteUser)
+    .expect(400)
+    .then(({ res }) => {
+      expect(res.statusMessage).toBe("Bad Request");
+    })
+  });
+  });
+
 describe('DELETE /api/comments/:comment_id', () => {
   test('should delete a comment by comment_id', () => {
     return request(app)
@@ -563,8 +598,7 @@ describe('GET /api/users/:username', () => {
     });
   });
 
-
-  describe('GET /api', () => {
+describe('GET /api', () => {
     test('should return a JSON describing all the available endpoints', () => {
       return request(app)
       .get("/api")
@@ -692,13 +726,13 @@ describe('POST /api/reviews', () => {
       .post("/api/reviews")
       .send(incompleteReview)
       .expect(400)
-      .then(({ body: { msg } }) => {
+      .then(({  body: { msg }}) => {
         expect(msg).toBe("Invalid Values");
       })
     });
-    });
+  });
 
-    describe('DELETE /api/reviews/:review_id', () => {
+describe('DELETE /api/reviews/:review_id', () => {
       test('should delete a review by review_id', () => {
         return request(app)
         .delete('/api/reviews/6')
@@ -720,4 +754,4 @@ describe('POST /api/reviews', () => {
           expect(msg).toBe("Bad Request");
         })
         })
-      });
+  });
