@@ -690,7 +690,8 @@ describe('POST /api/reviews', () => {
       owner: 'mallionaire',
       review_body: 'It is like Risk for pacifists',
       designer: 'Klaus Teuber',
-      category: 'euro game'
+      category: 'euro game',
+      review_img_url: 'https://images.pexels.com/photos/163064/play-stone-network-networked-interactive-163064.jpeg'
     }
     test('should add a review to the database and respond with the newly created review', () => {
       return request(app)
@@ -720,7 +721,8 @@ describe('POST /api/reviews', () => {
         owner: 'mallionaire',
         review_body: 'It is like Risk for pacifists',
         designer: '',
-        category: ''
+        category: '',
+        review_img_url: ''
       }
       return request(app)
       .post("/api/reviews")
