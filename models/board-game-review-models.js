@@ -3,6 +3,9 @@ const { query } = require("../db/connection");
 const db = require("../db/connection");
 const { read } = require("fs");
 const fs = require('fs/promises');
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const asyncHandler = require("express-async-handler");
 
 exports.selectCategories = () => {
     return  db
@@ -118,10 +121,14 @@ exports.selectUser = (username) => {
             .then(({ rows }) => rows[0])
 };
 
-exports.insertUser = (user) => {
-    const { username, name, avatar_url } = user;
+exports.insertUser = async (user) => {
+    const { username, name, avatar_url, email, password } = user;
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
     return  db
-            .query(`INSERT INTO users (username, name, avatar_url) VALUES ($1, $2, $3) RETURNING *;`, [username, name, avatar_url])
+            .query(`INSERT INTO users (username, name, avatar_url, email, password) VALUES ($1, $2, $3, $4, $5) RETURNING *;`, [username, name, avatar_url, email, hashedPassword])
             .then(({ rows }) => {
                 return rows[0]
             })
@@ -151,3 +158,26 @@ exports.removeReview = (id) => {
             .query(`DELETE FROM reviews WHERE review_id = $1;`, [id])
             .then(({ rows }) => rows)
 }
+
+exports.login = async (userCreds) => {
+    const { username, password } = userCreds;
+  
+    const user = await db
+    .query(`SELECT * FROM users WHERE username = $1`, [username])
+    .then(({ rows }) => rows[0])
+  
+    if (user && (await bcrypt.compare(password, user.password))) {
+      return {
+        username: user.username,
+        token: generateToken(user.username),
+      };
+    } else {
+        return Promise.reject({ status: 401, msg: 'Unauthorized'})
+    }
+  };
+
+  const generateToken = (username) => {
+    return jwt.sign({ username }, process.env.JWT_SECRET, {
+      expiresIn: "30d",
+    });
+  };

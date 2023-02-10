@@ -518,7 +518,9 @@ describe('POST /api/create-account', () => {
     const newUser = {
       username: 'BillyBob',
       name: 'Bob',
-      avatar_url: 'https://www.giantbomb.com/a/uploads/scale_small/0/9493/2498107-cletus.gif'
+      avatar_url: 'https://www.giantbomb.com/a/uploads/scale_small/0/9493/2498107-cletus.gif',
+      email: 'bob@gmail.com',
+      password: 'apassword'
     }
     return request(app)
     .post("/api/create-account")
@@ -528,7 +530,9 @@ describe('POST /api/create-account', () => {
       const expectedUser = {
         username: 'BillyBob',
         name: 'Bob',
-        avatar_url: 'https://www.giantbomb.com/a/uploads/scale_small/0/9493/2498107-cletus.gif'
+        avatar_url: 'https://www.giantbomb.com/a/uploads/scale_small/0/9493/2498107-cletus.gif',
+        email: 'bob@gmail.com',
+        password: expect.any(String)
       }
     expect(body).toEqual(expect.objectContaining(expectedUser))
     })
@@ -757,3 +761,37 @@ describe('DELETE /api/reviews/:review_id', () => {
         })
         })
   });
+
+describe('POST /api/login', () => {
+  const userCreds = {
+    username: "mallionaire",
+    password: 'apassword'
+  }
+  const invalidCreds = {
+    username: "mallionaire",
+    password: 'anincorrectpassword'
+  }
+  test('should take a username and password, check if it matches the database, and return username plus a jsonwebtoken', () => {
+      return request(app)
+      .post('/api/login')
+      .send(userCreds)
+      .expect(201)
+      .then(({ body }) => {
+        const { user } = body;
+        const expectedUser = {
+          username: "mallionaire",
+          token: expect.any(String)
+        }
+        expect(user).toEqual(expect.objectContaining(expectedUser));
+      })
+  });
+  test('should return a 401 unauthorized if credentials incorrect', () => {
+    return request(app)
+    .post('/api/login')
+    .send(invalidCreds)
+    .expect(401)
+    .then(({  body: { msg }}) => {
+      expect(msg).toBe("Unauthorized");
+    })
+  });
+});
