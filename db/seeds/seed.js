@@ -23,7 +23,9 @@ const seed = async (data) => {
   CREATE TABLE users (
     username VARCHAR PRIMARY KEY,
     name VARCHAR NOT NULL,
-    avatar_url VARCHAR
+    avatar_url VARCHAR,
+	email VARCHAR,
+	password VARCHAR
   );`);
 
 	await Promise.all([topicsTablePromise, usersTablePromise]);
@@ -61,11 +63,13 @@ const seed = async (data) => {
 		.then((result) => result.rows);
 
 	const insertUsersQueryStr = format(
-		"INSERT INTO users ( username, name, avatar_url) VALUES %L RETURNING *;",
-		userData.map(({ username, name, avatar_url }) => [
+		"INSERT INTO users ( username, name, avatar_url, email, password) VALUES %L RETURNING *;",
+		userData.map(({ username, name, avatar_url, email, password }) => [
 			username,
 			name,
 			avatar_url,
+			email,
+			password,
 		])
 	);
 	const usersPromise = db
