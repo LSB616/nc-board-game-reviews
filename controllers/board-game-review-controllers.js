@@ -1,7 +1,8 @@
 const { request, response } = require("../app");
+const asyncHandler = require("express-async-handler");
 
 
-const { selectReviews, selectCategories, selectReview, selectComment, insertComment, updateReviewVotes, updateReview, selectUsers, removeComment, returnApi, selectUser, updateComment, insertReview, removeReview, insertUser } = require("../models/board-game-review-models");
+const { selectReviews, selectCategories, selectReview, selectComment, insertComment, updateReviewVotes, updateReview, selectUsers, removeComment, returnApi, selectUser, updateComment, insertReview, removeReview, insertUser, login } = require("../models/board-game-review-models");
 const { checkIfReviewIdExists, isIdValid, isCommentValid, checkIfCategoryExists, checkIfNewUserDataIsValid, checkIfCommentIdExists, checkIfUserExists } = require('../controllers/controller_functions');
 
 
@@ -175,3 +176,12 @@ exports.deleteReview = (req, res, next) => {
         next(err);
     });
 };
+
+exports.loginUser = asyncHandler(async (req, res, next) => {
+    try {
+      const user = await login(req.body);
+      res.status(201).send({ user });
+    } catch (e) {
+      next(e);
+    }
+  });

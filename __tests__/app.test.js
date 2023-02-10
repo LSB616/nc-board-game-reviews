@@ -761,3 +761,37 @@ describe('DELETE /api/reviews/:review_id', () => {
         })
         })
   });
+
+describe('POST /api/login', () => {
+  const userCreds = {
+    username: "mallionaire",
+    password: 'apassword'
+  }
+  const invalidCreds = {
+    username: "mallionaire",
+    password: 'anincorrectpassword'
+  }
+  test('should take a username and password, check if it matches the database, and return username plus a jsonwebtoken', () => {
+      return request(app)
+      .post('/api/login')
+      .send(userCreds)
+      .expect(201)
+      .then(({ body }) => {
+        const { user } = body;
+        const expectedUser = {
+          username: "mallionaire",
+          token: expect.any(String)
+        }
+        expect(user).toEqual(expect.objectContaining(expectedUser));
+      })
+  });
+  test('should return a 401 unauthorized if credentials incorrect', () => {
+    return request(app)
+    .post('/api/login')
+    .send(invalidCreds)
+    .expect(401)
+    .then(({  body: { msg }}) => {
+      expect(msg).toBe("Unauthorized");
+    })
+  });
+});
