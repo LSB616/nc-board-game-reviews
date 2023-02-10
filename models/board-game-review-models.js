@@ -169,6 +169,9 @@ exports.login = async (userCreds) => {
     if (user && (await bcrypt.compare(password, user.password))) {
       return {
         username: user.username,
+        name: user.name,
+        avatar_url: user.avatar_url,
+        email: user.email,
         token: generateToken(user.username),
       };
     } else {
