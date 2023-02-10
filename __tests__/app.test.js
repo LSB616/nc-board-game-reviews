@@ -518,7 +518,9 @@ describe('POST /api/create-account', () => {
     const newUser = {
       username: 'BillyBob',
       name: 'Bob',
-      avatar_url: 'https://www.giantbomb.com/a/uploads/scale_small/0/9493/2498107-cletus.gif'
+      avatar_url: 'https://www.giantbomb.com/a/uploads/scale_small/0/9493/2498107-cletus.gif',
+      email: 'bob@gmail.com',
+      password: 'apassword'
     }
     return request(app)
     .post("/api/create-account")
@@ -528,7 +530,9 @@ describe('POST /api/create-account', () => {
       const expectedUser = {
         username: 'BillyBob',
         name: 'Bob',
-        avatar_url: 'https://www.giantbomb.com/a/uploads/scale_small/0/9493/2498107-cletus.gif'
+        avatar_url: 'https://www.giantbomb.com/a/uploads/scale_small/0/9493/2498107-cletus.gif',
+        email: 'bob@gmail.com',
+        password: expect.any(String)
       }
     expect(body).toEqual(expect.objectContaining(expectedUser))
     })

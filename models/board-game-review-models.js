@@ -3,6 +3,7 @@ const { query } = require("../db/connection");
 const db = require("../db/connection");
 const { read } = require("fs");
 const fs = require('fs/promises');
+const bcrypt = require("bcryptjs");
 
 exports.selectCategories = () => {
     return  db
@@ -118,10 +119,14 @@ exports.selectUser = (username) => {
             .then(({ rows }) => rows[0])
 };
 
-exports.insertUser = (user) => {
-    const { username, name, avatar_url } = user;
+exports.insertUser = async (user) => {
+    const { username, name, avatar_url, email, password } = user;
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
     return  db
-            .query(`INSERT INTO users (username, name, avatar_url) VALUES ($1, $2, $3) RETURNING *;`, [username, name, avatar_url])
+            .query(`INSERT INTO users (username, name, avatar_url, email, password) VALUES ($1, $2, $3, $4, $5) RETURNING *;`, [username, name, avatar_url, email, hashedPassword])
             .then(({ rows }) => {
                 return rows[0]
             })
