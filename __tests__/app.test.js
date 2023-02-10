@@ -772,7 +772,7 @@ describe('POST /api/login', () => {
     password: 'anincorrectpassword'
   }
   test('should take a username and password, check if it matches the database, and return username plus a jsonwebtoken', () => {
-      return request(app)
+    return request(app)
       .post('/api/login')
       .send(userCreds)
       .expect(201)
