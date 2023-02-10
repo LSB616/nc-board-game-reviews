@@ -780,6 +780,9 @@ describe('POST /api/login', () => {
         const { user } = body;
         const expectedUser = {
           username: "mallionaire",
+          name: 'haz',
+          avatar_url: 'https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg',
+          email: 'haz@gmail.com',
           token: expect.any(String)
         }
         expect(user).toEqual(expect.objectContaining(expectedUser));
