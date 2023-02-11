@@ -159,6 +159,12 @@ exports.removeReview = (id) => {
             .then(({ rows }) => rows)
 }
 
+const generateToken = (username) => {
+  return jwt.sign({ username }, process.env.JWT_SECRET, {
+    expiresIn: "30d",
+  });
+};
+
 exports.login = async (userCreds) => {
     const { username, password } = userCreds;
   
@@ -177,10 +183,4 @@ exports.login = async (userCreds) => {
     } else {
         return Promise.reject({ status: 401, msg: 'Unauthorized'})
     }
-  };
-
-  const generateToken = (username) => {
-    return jwt.sign({ username }, process.env.JWT_SECRET, {
-      expiresIn: "30d",
-    });
   };

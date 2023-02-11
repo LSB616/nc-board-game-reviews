@@ -177,11 +177,13 @@ exports.deleteReview = (req, res, next) => {
     });
 };
 
-exports.loginUser = asyncHandler(async (req, res, next) => {
-    try {
-      const user = await login(req.body);
-      res.status(201).send({ user });
-    } catch (e) {
-      next(e);
-    }
-  });
+exports.loginUser = (req, res, next) => {
+    const userCreds = req.body;
+    login(userCreds)
+    .then((user) => {
+        res.status(201).send({ user });
+    })
+    .catch((err) => {
+        next(err);
+    });
+  };
