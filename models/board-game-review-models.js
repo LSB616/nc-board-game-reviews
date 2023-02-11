@@ -6,6 +6,7 @@ const fs = require('fs/promises');
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const asyncHandler = require("express-async-handler");
+const { type } = require("os");
 
 exports.selectCategories = () => {
     return  db
@@ -173,13 +174,12 @@ exports.login = async (userCreds) => {
     .then(({ rows }) => rows[0])
   
     if (user && (await bcrypt.compare(password, user.password))) {
-      return {
-        username: user.username,
+        let userData = {username: user.username,
         name: user.name,
         avatar_url: user.avatar_url,
         email: user.email,
-        token: generateToken(user.username),
-      };
+        token: generateToken(user.username)}
+        return userData
     } else {
         return Promise.reject({ status: 401, msg: 'Unauthorized'})
     }

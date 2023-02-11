@@ -764,7 +764,7 @@ describe('DELETE /api/reviews/:review_id', () => {
 
 describe('POST /api/login', () => {
   const userCreds = {
-    username: "mallionaire",
+    username: 'mallionaire',
     password: 'apassword'
   }
   const invalidCreds = {
