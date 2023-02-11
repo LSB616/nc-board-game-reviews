@@ -773,7 +773,7 @@ describe('POST /api/login', () => {
   }
   test('should take a username and password, check if it matches the database, and return username plus a jsonwebtoken', () => {
     return request(app)
-      .post('/api/login')
+      .post('/api/login-user')
       .send(userCreds)
       .expect(201)
       .then(({ body }) => {
@@ -790,7 +790,7 @@ describe('POST /api/login', () => {
   });
   test('should return a 401 unauthorized if credentials incorrect', () => {
     return request(app)
-    .post('/api/login')
+    .post('/api/login-user')
     .send(invalidCreds)
     .expect(401)
     .then(({  body: { msg }}) => {

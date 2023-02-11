@@ -21,7 +21,7 @@ app.post('/api/create-account', postUser)
 app.patch('/api/comments/:comment_id', patchComment)
 app.post('/api/reviews', postReview)
 app.delete('/api/reviews/:review_id', deleteReview)
-app.post('/api/login', loginUser);
+app.post('/api/login-user', loginUser);
 
 
 
