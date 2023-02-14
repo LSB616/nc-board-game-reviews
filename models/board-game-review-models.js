@@ -177,7 +177,7 @@ exports.login = async (userCreds) => {
     const token = await generateToken(user.username)
 
     if (theSamePass) {
-        return user
+        return {...user}
     } else {
         return Promise.reject({ status: 401, msg: 'Unauthorized'})
     }
