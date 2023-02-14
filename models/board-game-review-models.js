@@ -173,14 +173,20 @@ exports.login = async (userCreds) => {
     .query(`SELECT * FROM users WHERE username = $1`, [username])
     .then(({ rows }) => rows[0])
 
+    console.log(typeof user);
+
     const theSamePass = await bcrypt.compare(password, user.password)
     const token = await generateToken(user.username)
 
+    const returnUser = {"username": user.username,
+    "name": user.name,
+    "avatar_url": user.avatar_url,
+    "email": user.email}
+
+    console.log(returnUser);
+
     if (theSamePass) {
-        return {"username": user.username,
-        "name": user.name,
-        "avatar_url": user.avatar_url,
-        "email": user.email}
+        return {"msg": "this goes through"}
     } else {
         return Promise.reject({ status: 401, msg: 'Unauthorized'})
     }
