@@ -175,7 +175,9 @@ exports.login = async (userCreds) => {
   
     // && ()
 
-    if (bcrypt.compare(password, user.password)) {
+    const theSamePass = await bcrypt.compare(password, user.password)
+
+    if (theSamePass) {
         return user
         // let userData = {username: user.username,
         // name: user.name,
