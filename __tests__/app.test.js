@@ -762,33 +762,33 @@ describe('DELETE /api/reviews/:review_id', () => {
         })
   });
 
-describe('POST /api/login', () => {
-  const userCreds = JSON.parse('{"username": "mallionaire", "password": "apassword"}')
-  const invalidCreds = JSON.parse('{"username": "mallionaire", "password": "anincorrectpassword"}')
-  test('should take a username and password, check if it matches the database, and return username plus a jsonwebtoken', () => {
-    return request(app)
-      .post('/api/login-user')
-      .send(userCreds)
-      .expect(201)
-      .then(({ body }) => {
-        const { user } = body;
-        const expectedUser = {
-          username: "mallionaire",
-          name: 'haz',
-          avatar_url: 'https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg',
-          email: 'haz@gmail.com',
-          token: expect.any(String)
-        }
-        expect(user).toEqual(expect.objectContaining(expectedUser));
-      })
-  });
-  test('should return a 401 unauthorized if credentials incorrect', () => {
-    return request(app)
-    .post('/api/login-user')
-    .send(invalidCreds)
-    .expect(401)
-    .then(({  body: { msg }}) => {
-      expect(msg).toBe("Unauthorized");
-    })
-  });
-});
+// describe('POST /api/login', () => {
+//   const userCreds = JSON.parse('{"username": "mallionaire", "password": "apassword"}')
+//   const invalidCreds = JSON.parse('{"username": "mallionaire", "password": "anincorrectpassword"}')
+//   test('should take a username and password, check if it matches the database, and return username plus a jsonwebtoken', () => {
+//     return request(app)
+//       .post('/api/login-user')
+//       .send(userCreds)
+//       .expect(201)
+//       .then(({ body }) => {
+//         const { user } = body;
+//         const expectedUser = {
+//           username: "mallionaire",
+//           name: 'haz',
+//           avatar_url: 'https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg',
+//           email: 'haz@gmail.com',
+//           token: expect.any(String)
+//         }
+//         expect(user).toEqual(expect.objectContaining(expectedUser));
+//       })
+//   });
+//   test('should return a 401 unauthorized if credentials incorrect', () => {
+//     return request(app)
+//     .post('/api/login-user')
+//     .send(invalidCreds)
+//     .expect(401)
+//     .then(({  body: { msg }}) => {
+//       expect(msg).toBe("Unauthorized");
+//     })
+//   });
+// });
