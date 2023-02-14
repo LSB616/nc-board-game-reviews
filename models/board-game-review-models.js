@@ -160,7 +160,7 @@ exports.removeReview = (id) => {
             .then(({ rows }) => rows)
 }
 
-const generateToken = (username) => {
+const generateToken = async (username) => {
   return jwt.sign({ username }, process.env.JWT_SECRET, {
     expiresIn: "30d",
   });
@@ -176,6 +176,7 @@ exports.login = async (userCreds) => {
     // && ()
 
     const theSamePass = await bcrypt.compare(password, user.password)
+    const token = await generateToken(user.username)
 
     if (theSamePass) {
         // let userData = {username: user.username,
@@ -183,7 +184,7 @@ exports.login = async (userCreds) => {
         // avatar_url: user.avatar_url,
         // email: user.email,
         // token: generateToken(user.username)}
-        return {...user, token: generateToken(user.username)}
+        return {...user, token: token}
     } else {
         return Promise.reject({ status: 401, msg: 'Unauthorized'})
     }
