@@ -178,12 +178,12 @@ exports.login = async (userCreds) => {
     const theSamePass = await bcrypt.compare(password, user.password)
 
     if (theSamePass) {
-        let userData = {username: user.username,
-        name: user.name,
-        avatar_url: user.avatar_url,
-        email: user.email,
-        token: generateToken(user.username)}
-        return userData
+        // let userData = {username: user.username,
+        // name: user.name,
+        // avatar_url: user.avatar_url,
+        // email: user.email,
+        // token: generateToken(user.username)}
+        return user
     } else {
         return Promise.reject({ status: 401, msg: 'Unauthorized'})
     }
