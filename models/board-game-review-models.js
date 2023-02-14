@@ -177,10 +177,10 @@ exports.login = async (userCreds) => {
     const token = await generateToken(user.username)
 
     if (theSamePass) {
-        return {username: user.username,
-        name: user.name,
-        avatar_url: user.avatar_url,
-        email: user.email}
+        return {"username": user.username,
+        "name": user.name,
+        "avatar_url": user.avatar_url,
+        "email": user.email}
     } else {
         return Promise.reject({ status: 401, msg: 'Unauthorized'})
     }
