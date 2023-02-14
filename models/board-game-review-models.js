@@ -182,11 +182,12 @@ exports.login = async (userCreds) => {
     "name": user.name,
     "avatar_url": user.avatar_url,
     "email": user.email}
-
-    console.log(returnUser);
+    
+    const basicRes = JSON.parse('{"msg": "this goes through"}')
+    console.log(basicRes);
 
     if (theSamePass) {
-        return {"msg": "this goes through"}
+        return basicRes
     } else {
         return Promise.reject({ status: 401, msg: 'Unauthorized'})
     }
