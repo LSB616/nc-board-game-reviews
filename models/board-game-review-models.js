@@ -174,11 +174,11 @@ exports.login = async (userCreds) => {
     .then(({ rows }) => rows[0])
   
     if (user && (await bcrypt.compare(password, user.password))) {
-        let userData = JSON.stringify({username: user.username,
+        let userData = {username: user.username,
         name: user.name,
         avatar_url: user.avatar_url,
         email: user.email,
-        token: generateToken(user.username)})
+        token: generateToken(user.username)}
         return userData
     } else {
         return Promise.reject({ status: 401, msg: 'Unauthorized'})

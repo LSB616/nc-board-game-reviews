@@ -779,7 +779,7 @@ describe('POST /api/login', () => {
           email: 'haz@gmail.com',
           token: expect.any(String)
         }
-        expect(JSON.parse(user)).toEqual(expect.objectContaining(expectedUser));
+        expect(user).toEqual(expect.objectContaining(expectedUser));
       })
   });
   test('should return a 401 unauthorized if credentials incorrect', () => {
