@@ -183,7 +183,7 @@ exports.login = async (userCreds) => {
         // avatar_url: user.avatar_url,
         // email: user.email,
         // token: generateToken(user.username)}
-        return user
+        return {...user}
     } else {
         return Promise.reject({ status: 401, msg: 'Unauthorized'})
     }
