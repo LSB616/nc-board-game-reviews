@@ -173,9 +173,9 @@ exports.login = async (userCreds) => {
     .query(`SELECT * FROM users WHERE username = $1`, [username])
     .then(({ rows }) => rows[0])
   
-    // && (await bcrypt.compare(password, user.password))
+    // && ()
 
-    if (user) {
+    if (bcrypt.compare(password, user.password)) {
         return user
         // let userData = {username: user.username,
         // name: user.name,
