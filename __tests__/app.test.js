@@ -763,14 +763,8 @@ describe('DELETE /api/reviews/:review_id', () => {
   });
 
 describe('POST /api/login', () => {
-  const userCreds = {
-    username: 'mallionaire',
-    password: 'apassword'
-  }
-  const invalidCreds = {
-    username: "mallionaire",
-    password: 'anincorrectpassword'
-  }
+  const userCreds = JSON.parse('{"username": "mallionaire", "password": "apassword"}')
+  const invalidCreds = JSON.parse('{"username": "mallionaire", "password": "anincorrectpassword"}')
   test('should take a username and password, check if it matches the database, and return username plus a jsonwebtoken', () => {
     return request(app)
       .post('/api/login-user')
