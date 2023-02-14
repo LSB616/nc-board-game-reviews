@@ -160,7 +160,7 @@ exports.removeReview = (id) => {
             .then(({ rows }) => rows)
 }
 
-const generateToken = async (username) => {
+const generateToken = (username) => {
   return jwt.sign({ username }, process.env.JWT_SECRET, {
     expiresIn: "30d",
   });
@@ -174,7 +174,6 @@ exports.login = async (userCreds) => {
     .then(({ rows }) => rows[0])
 
     const theSamePass = await bcrypt.compare(password, user.password)
-    const token = await generateToken(user.username)
 
     if (theSamePass) {
         return {...user}
